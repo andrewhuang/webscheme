@@ -8,7 +8,7 @@
 (import old-generic-procedures)
 (import old-s2j)
 (import libraries)
-(require-library "sisc/libs/srfi")
+(require-library 'sisc/libs/srfi)
 (import srfi-13) ; string functions for assertions
 (import srfi-14)
 (import threading) ; for user dialogs
@@ -21,7 +21,7 @@
 
 ;; vector-map
 ;; .parameter proc procedure to apply to vector elements
-;; .parmeter vec vector of elements
+;; .parameter vec vector of elements
 (define (vector-map proc vec)
   (let* ((len (vector-length vec))
 	 (result (make-vector len)))
