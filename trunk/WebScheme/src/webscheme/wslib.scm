@@ -228,12 +228,12 @@
 ;; Push "value" onto "queueKey" queue in "logKey"
 (define
   (ws-log-push logKey queueKey value)
-  (push ws-logger-obj logKey queueKey value))
+  (push ws-logger-obj (->jstring logKey) (->jstring queueKey) (->jstring value)))
 
 ;; Push "value" onto "queueKey" queue within the current page
 (define
   (ws-log-page-push queueKey value)
-  (push ws-logger-obj queueKey value))
+  (push ws-logger-obj (->jstring queueKey) (->jstring value)))
 
 ; pushes like |ws-log-push| unless it's already happened
 ; FIX this session (hashtable) vs.  ever (db hit)
