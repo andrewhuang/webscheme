@@ -47,10 +47,10 @@ public class SchemeHandler extends JApplet {
 	/** Map of event names to event definitions */
 	final Map events = new HashMap();
 
-	/** Scheme symbol for the WebScheme evaluation timeout */
-	static final Symbol TIMEOUT_DELAY_SYM = Symbol.get("ws-timeout-delay");
-	/** Scheme symbol for the message to show upon evaluation timeout */
-	static final Symbol TIMEOUT_MESSAGE_SYM = Symbol.get("ws-timeout-message");
+	/** seconds for the WebScheme evaluation timeout */
+	static int timeoutDelay = 3;
+	/** the message to show upon evaluation timeout */
+	static String timeoutMessage = "Scheme evaluation exceed time limit";
 
 	/** for communication with Scheme enviroment */
 	static Interpreter interpreter;
@@ -360,7 +360,7 @@ public class SchemeHandler extends JApplet {
 	 * @param timeout in seconds
 	 */
 	public void setTimeoutDelay(int newDelay) {
-		EvaluationThread.timeoutDelay = newDelay;
+		timeoutDelay = newDelay;
 	}
 	
 	/**
@@ -368,7 +368,7 @@ public class SchemeHandler extends JApplet {
 	 * @param message to display
 	 */
 	public void setTimeoutMessage(String newMessage) {
-		EvaluationThread.timeoutMessage = newMessage;
+		timeoutMessage = newMessage;
 	}
 	
 	/** Evaluate the given s-expression
@@ -386,9 +386,6 @@ public class SchemeHandler extends JApplet {
 	 * 	@author Turadg
 	 */
 	class EvaluationThread extends Thread {
-		static int timeoutDelay;
-		static String timeoutMessage = "Scheme evaluation exceed time limit";
-
 		final Interpreter interpreter;
 		final javax.swing.Timer timer;
 		final String sexpression; // to evaluate
