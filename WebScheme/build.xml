@@ -58,20 +58,33 @@
 
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}"/>
+    
+    <!-- Copy library JARs into distribution dir -->
+    <copy todir="${dist}">
+      <fileset dir="lib"/>
+    </copy>
 
     <!-- Put everything in ${build}/webscheme into the webscheme JAR -->
     <jar destfile="${dist}/${webscheme.jarname}"
          basedir="${build}"
 	 includes="webscheme/">
       <manifest>
- 	<attribute name="Built-By" value="${user.name}"/>
-	<!-- Include other jars as download extensions -->
-	<attribute name="Class-Path" value="${webscheme.extensions}"/>
-	<attribute name="Specification-Title" value="WebScheme"/>
-	<attribute name="Specification-Version" value="${DSTAMP}.${TSTAMP}"/>
-	<attribute name="Specification-Vendor" value="University of California, Berkeley"/>
+		<attribute name="Sealed" value="true"/>
+ 		<attribute name="Built-By" value="${user.name}"/>
+		<!-- Include other jars as download extensions -->
+		<attribute name="Class-Path" value="${webscheme.extensions}"/>
+		<attribute name="Specification-Title" value="WebScheme"/>
+		<attribute name="Specification-Version" value="${DSTAMP}.${TSTAMP}"/>
+		<attribute name="Specification-Vendor" value="University of California, Berkeley"/>
       </manifest>
     </jar>
+  </target>
+  
+  <target name="sign-all" depends="dist"
+        description="Sign the all the JARs">
+	<signjar alias="wise" storepass="wisepass">
+	  <fileset dir="${dist}"/>
+	</signjar>
   </target>
 
   <!-- Put JARs on the developer web server -->
@@ -100,16 +113,18 @@
     <delete dir="${dist}"/>
   </target>
 
-  <!-- Put JARs on the wise-develop server -->
   <target name="install-wise" depends="dist"
         description="Copy necessary JARs into wise-develop web tree">
     <property name="wise.server" value="wise-develop.soe.berkeley.edu"/>
     <property name="wise.dir" value="~/html/modules/webscheme/lib"/>
     <exec executable="scp">
       <arg value="dist/*.jar"/>
-      <arg value="lib/*.jar"/>
       <arg value="${wise.server}:${wise.dir}"/>
     </exec>
   </target>
 
+  <target name="install-wise-signed" depends="sign-all,install-wise"
+        description="Copy signed JARs into wise-develop web tree">
+  </target>
+  
 </project>
