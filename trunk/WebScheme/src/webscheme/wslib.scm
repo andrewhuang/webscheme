@@ -1,6 +1,6 @@
 ;;;; WebScheme library functions
 
-(define ws-lib-ver "030321.1600")
+(define ws-lib-ver "030723.1200")
 (display "Loading WebScheme library (")
 (display ws-lib-ver)
 (display ")\n")
@@ -11,6 +11,12 @@
 (require-library "sisc/libs/srfi")
 (import srfi-13) ; string functions for assertions
 (import srfi-14)
+
+;; schemestring
+(define (schemestring s)
+  (if (string? s)
+      s
+      (symbol->string s) ) )
 
 ;; vector-map
 ;; .parameter proc procedure to apply to vector elements
@@ -92,14 +98,37 @@
 ;; .parameter seconds seconds until timeout
 (define (ws-set-timeout-delay! seconds)
   (set-timeout-delay (->jint seconds))
+)
 
 ;; Set WebScheme timeout message
 ;; .parameter message to deliver on timeout
 (define (ws-set-timeout-message! str)
   (set-timeout-message (->jstring str))
-
+)
 
 ;;; Fields
+
+;; Make a template in which strings are maintained and symbols
+;; indicate the field to query
+; FIX use real typing
+(define (ws-make-template . ls)
+  ls) 
+
+;; Fill in a template created by ws-make-template
+;; .parameter template to fill
+(define (ws-fill-template template)
+  (string-concatenate/shared (map ws-get-or-keep-string template) ) )
+
+;; If the arg is a string, just return it.  If it's not,
+;; try using it to query the page for the field string
+;; .parameter id-or-string the argument that may be either a string or a field id
+(define
+  (ws-get-or-keep-string id-or-string)
+  (cond ((string? id-or-string) id-or-string)  ; keep
+        ((symbol? id-or-string) (ws-get-string id-or-string)) ; get
+        (else "error: not string or symbol!") ; FIX throw a real error
+  )
+)
 
 ;; Set the value of a field
 ;; .parameter id id of field to address
@@ -120,7 +149,7 @@
 ;; .parameter src new src for img
 (define (ws-set-src id src)
   (ws-eval-js
-   (string-append "document.getElementById(\"" id "\").src=\"" src "\"")))
+   (string-append "document.getElementById(\"" (schemestring id) "\").src=\"" src "\"")))
 
 ;; Set the DISABLED flag of a field
 ;; .parameter id id of field to address
@@ -128,7 +157,7 @@
 (define (ws-set-disabled id disabled)
   (let ((dval (if disabled "true" "")))
     (ws-eval-js
-     (string-append "document.getElementById(\"" id "\").disabled=\"" dval "\""))))
+     (string-append "document.getElementById(\"" (schemestring id) "\").disabled=\"" dval "\""))))
 
 ;; Set the status of a status field
 ;; .parameter id id of field to address
@@ -143,6 +172,7 @@
 ; using it here helps somehow
 (display "test string-length (3): ")(display (string-length "( ("))(display "\n")
 
+(define-generic ws-assert-length)
 ;; Assert that the length of the field is exactly "length"
 ;; .returns #t if the specified field contains a string of length 'length'
 (define (ws-assert-length id length)
