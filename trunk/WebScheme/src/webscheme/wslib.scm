@@ -84,7 +84,7 @@
   (->string (show-input-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message))))
 
 
-; FIX define in SchemeHandler (*ws-timeout-delay*)
+; FIX keep this value in Java and make a method to set it
 (define ws-timeout-delay 3)
 ;; Set WebScheme timeout delay
 ;; .parameter seconds seconds until timeout
