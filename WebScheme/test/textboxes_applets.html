@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<!--WISEHEAD-->
+<!-- <base href="http://turadg.wisetest.org/modules/webscheme/student.php"/> -->
+<script type="text/javascript">
+wise_groupID = ;
+wise_pageID = 4;
+</script>
+<!--/WISEHEAD-->
+<title>WebScheme testing</title>
+<link href="defs/ws-defaults.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="defs/ws-lib.js"></script>
+</head>
+<body><div>
+<!-- Sorry, this is not an XHTML element but Safari ne comprends pas l'objet -->
+<applet
+  code="webscheme.SchemeHandler.class"
+  scriptable="true"
+  mayscript="true"
+ classid="java:webscheme.SchemeHandler.class" width="110" height="30" archive="lib/webscheme.jar" name="SchemeHandler" id="SchemeHandler" standby="Loading WebScheme daemon"><param name="mayscript" value="true"/> <param name="scriptable" value="true"/> <param name="name" value="SchemeHandler"/> <param name="init-expr" value="(define init-check &quot;check&quot;)"/> <param name="event-name-0" value="runallcode"/> <param name="event-assertions-0" value=""/> <param name="event-template-0" value="{allcode}"/> <param name="event-name-1" value="setcode"/> <param name="event-assertions-1" value=""/> <param name="event-template-1" value="(ws-set-string &quot;allcode&quot; &quot;coolio&quot;)"/> <param name="event-name-2" value="evaljs"/> <param name="event-assertions-2" value=""/> <param name="event-template-2" value="(ws-eval-js (ws-get-string &quot;jscode&quot;))"/> <param name="event-name-3" value="sb1passed"/> <param name="event-assertions-3" value=""/> <param name="event-template-3" value="(ws-set-status &quot;sb1&quot; &quot;passed&quot;)"/> <param name="event-name-4" value="sb1failed"/> <param name="event-assertions-4" value=""/> <param name="event-template-4" value="(ws-set-status &quot;sb1&quot; &quot;failed&quot;)"/></applet></div> <form id="wsfields" onsubmit="return false" action=""><div><hr/> <p>e. testing &#39;schemearea&#39; field</p> 
+<!-- Sorry, this is not an XHTML element but Safari ne comprends pas l'objet -->
+<applet
+  code="webscheme.SchemeHandler.class"
+  scriptable="true"
+  mayscript="true"
+ classid="java:webscheme.dom.EmbeddedEditorApplet.class" codebase="/modules/webscheme" archive="lib/webscheme.jar" id="allcode" title="allcode" width="400" height="100" standby="Loading Scheme editing area"><param name="mayscript" value="true"/> <param name="scriptable" value="true"/> <param name="name" value="allcode"/> <param name="startValue" value="(ws-set-string &quot;out&quot; &quot;something&quot;)"/></applet> <br/> <button onclick="runSchemeEvent(&#39;setcode&#39;);">reset</button> <br/> <button onclick="runSchemeEvent(&#39;runallcode&#39;);">run</button> <span id="out" title="out" class="outputField"> </span></div> <div><hr/> <p>f. testing javascript evaluation</p> <textarea id="jscode" title="jscode" class="inputField" cols="60" rows="4">document.getElementById(&quot;sb1&quot;).src=&quot;ws-icons/status_notrun.gif&quot;</textarea> <br/> <button onclick="runSchemeEvent(&#39;evaljs&#39;);">Run this Javascript code</button> <button onclick="runSchemeEvent(&#39;sb1passed&#39;);">Make passed</button> <button onclick="runSchemeEvent(&#39;sb1failed&#39;);">Make failed</button> <img id="sb1" title="sb1" alt="Status icon" src="ws-icons/status_notrun.gif"/></div></form></body></html>

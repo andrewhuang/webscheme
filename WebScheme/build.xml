@@ -8,10 +8,11 @@
 	<property name="browser" location="browser" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="run" location="run" />
-	<property name="tests" location="tests" />
+	<property name="run" location="target/antrun" />
+	<property name="test" location="test" />
 
-	<property name="browser-app" location="C:/mozilla1.7rc2/mozilla.exe"/>
+	<!-- override this in your own properties file -->
+	<property name="browser-app" location="C:/mozilla/mozilla.exe"/>
 	
 	<property name="debugging" value="on" />
 	<property name="optimization" value="off" />
@@ -91,6 +92,9 @@
 		</copy>
 		<copy todir="${run}/lib">
 			<fileset dir="${dist}" />
+		</copy>
+		<copy todir="${run}">
+			<fileset dir="${test}" />
 		</copy>
 	</target>
 	
