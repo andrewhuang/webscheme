@@ -2,12 +2,12 @@
 <classpath>
     <classpathentry kind="src" path="src"/>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="C:/cygwin/home/Turadg/jscheme/dist/ucwise.jar"/>
-    <classpathentry kind="lib" path="C:/cygwin/home/Turadg/jscheme/xmlrpc/xmlrpc-1.2-b1.jar"/>
     <classpathentry kind="lib" path="lib/liveconnect.jar"/>
     <classpathentry kind="lib" path="lib/sisc.jar"/>
     <classpathentry kind="lib" path="lib/sisc-lib.jar"/>
     <classpathentry kind="lib" path="lib/sisc-opt.jar"/>
     <classpathentry kind="lib" path="lib/sisc-heap.jar"/>
-    <classpathentry kind="output" path="build"/>
+    <classpathentry kind="lib" path="lib/xmlrpc-1.2-b1.jar"/>
+    <classpathentry kind="lib" path="lib/jist.jar"/>
+    <classpathentry kind="output" path="bin"/>
 </classpath>

@@ -9,7 +9,7 @@ package webscheme.dom;
 import java.awt.*;
 import javax.swing.*;
 
-import org.ucwise.jseditor.*;
+import jist.editor.*;
 
 public class EmbeddedEditorApplet extends JApplet implements ObjectElement {
 
