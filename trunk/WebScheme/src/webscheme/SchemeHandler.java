@@ -64,6 +64,9 @@ public class SchemeHandler extends JApplet {
 	}
 
 	public void init() {
+		printVersions();
+		printPermStatus("SchemeHandler init()");
+		
 		// FIX create a reset-interpreter PARAM command
 		if (interpreter != null)
 			reuseInterpreter();
@@ -90,10 +93,20 @@ public class SchemeHandler extends JApplet {
 			}
 		readEvents();
 		initSchemeEnv();
-		initWise();
+		// FIX disabled until XML-RPC works again
+//		initWise();
 		loadFiles();
 		evaluateQuiet(getParameter("init-expr"));
-		restoreDocumentState();
+//		restoreDocumentState();
+	}
+
+	/**
+	 * Output software versions in use
+	 */
+	void printVersions() {
+		System.out.println("loading WebScheme");
+		System.out.println("SchemeHandler $Revision$");
+		System.out.println("using SISC "+ sisc.util.Version.VERSION);
 	}
 
 	public void start() {
@@ -140,7 +153,7 @@ public class SchemeHandler extends JApplet {
 		String baseURL = getCodeBase().toString();
 		evaluateQuiet("(current-url \"" + baseURL + "\")");
 		evaluateQuiet("(import libraries)");
-		evaluateQuiet("(require-library \"webscheme/wslib\")");
+		evaluateQuiet("(require-library 'webscheme/wslib)");
 
 		Context.exit();
 	}
