@@ -5,8 +5,8 @@
 (display ws-lib-ver)
 (display ")\n")
 
-(import generic-procedures)
-(import s2j)
+(import old-generic-procedures)
+(import old-s2j)
 (import libraries)
 (require-library "sisc/libs/srfi")
 (import srfi-13) ; string functions for assertions

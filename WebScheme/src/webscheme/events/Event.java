@@ -9,9 +9,9 @@ package webscheme.events;
 
 import java.io.*;
 import java.util.*;
-import sisc.compiler.*;
 import sisc.data.*;
 import sisc.io.*;
+import sisc.reader.*;
 
 public class Event {
 	String name;
@@ -52,7 +52,6 @@ public class Event {
 			for (Value v = parser.nextExpression(port);
 				v != Parser.EOF;
 				v = parser.nextExpression(port)) {
-				// 		System.out.println("adding assertion '"+v+"' ("+v.getClass()+")");
 				assertions.add(v);
 			}
 		} catch (IOException iox) {
