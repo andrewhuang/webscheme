@@ -70,7 +70,7 @@ public class SchemeHandler extends JApplet {
 		else
 			try {
 				// TODO copy the SISC heap locally and then load it as a file
-				URL heapURL = sisc.HeapAnchor.class.getResource(SISC_HEAP);
+				URL heapURL = sisc.boot.HeapAnchor.class.getResource(SISC_HEAP);
 				if (heapURL == null)
 					throw new MissingResourceException(
 						"SISC heap file unavailable",
