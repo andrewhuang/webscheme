@@ -119,6 +119,8 @@ public class SchemeHandler extends JApplet {
 		// produce some debugging output
 		evaluateQuiet("(with/fc (lambda (m e) (print-exception (make-exception m e)))   (lambda () (require-library \"webscheme/wslib\") ))");
 		// 	evaluateQuiet("(require-library \"webscheme/wslib\")");
+
+		Context.exit();
 	}
 
 	void reuseInterpreter() {
@@ -307,14 +309,18 @@ public class SchemeHandler extends JApplet {
 			} catch (SchemeException ex) {
 				System.err.println("..assertion caused SchemeException: " + ex);
 				alltrue = false;
+				// FIX consider extending assertions to each define a message to display on failure
 				break;
 			}
 		}
 
 		if (!alltrue) {
-			// FIX decide whether to notify user automatically
-			System.out.println("ALERT: one or more assertions failed");
-			return;
+			JOptionPane.showMessageDialog(
+				null,
+				"Invalid input\n\n(see Java console for details)",
+				"Invalid input",
+				JOptionPane.ERROR_MESSAGE);
+			return;  // abort event
 		}
 
 		// through the gauntlet
@@ -409,10 +415,10 @@ public class SchemeHandler extends JApplet {
 				rv = r.eval(sexpression);
 				// do nothing with returned Value
 
-				// FIX remove once debugging's done
-				System.out.println(
-					"ET returned " + rv + " (" + rv.getClass() + ")");
+				//				System.out.println("ET returned " + rv + " (" + rv.getClass() + ")");
 			} catch (SchemeException se) {
+				timer.stop();
+				// because the message dialog will block this thread
 				System.err.println(se);
 				String message = ((Pair) ((Pair) se.m).car).cdr.toString();
 				JOptionPane.showMessageDialog(

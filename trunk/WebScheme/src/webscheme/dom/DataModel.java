@@ -44,14 +44,14 @@ public class DataModel {
 	 * @param id
 	 * @return JSObject identified by <code>id</id>
 	 * @throws NoSuchElementException
-	 */  
+	 */
 	JSObject getJSObjectById(String id) throws NoSuchElementException {
-		System.out.print("getJSObjectById(" + id + ") ");
+		//		System.out.print("getJSObjectById(" + id + ") ");
 		JSObject element = null;
 		try {
 			Object[] args = { id };
 			Object obj = doc.call("getElementById", args);
-			System.out.println("got object by id: " + obj);
+			//			System.out.println("got object by id: " + obj);
 			element = (JSObject) obj;
 		} catch (Exception ex) {
 			System.err.println(
@@ -59,7 +59,7 @@ public class DataModel {
 			try {
 				Object[] args = { id };
 				Object obj = doc.call("getElementById", args);
-				System.out.println("got object by id: " + obj);
+				//				System.out.println("got object by id: " + obj);
 				element = (JSObject) obj;
 			} catch (Exception ex2) {
 				ex2.printStackTrace();
