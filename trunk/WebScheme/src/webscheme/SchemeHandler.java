@@ -69,6 +69,14 @@ public class SchemeHandler extends JApplet {
 			reuseInterpreter();
 		else
 			try {
+				try {
+					// enabling interrupts
+					System.setProperty("sisc.permitInterrupts", "true");
+					System.err.println("interrupts enabled");
+				} catch (AccessControlException ex) {
+					System.err.println("WARNING: could not enable interrupts");
+				}
+
 				// TODO copy the SISC heap locally and then load it as a file
 				URL heapURL = sisc.boot.HeapAnchor.class.getResource(SISC_HEAP);
 				if (heapURL == null)
@@ -320,7 +328,7 @@ public class SchemeHandler extends JApplet {
 				"Invalid input\n\n(see Java console for details)",
 				"Invalid input",
 				JOptionPane.ERROR_MESSAGE);
-			return;  // abort event
+			return; // abort event
 		}
 
 		// through the gauntlet
