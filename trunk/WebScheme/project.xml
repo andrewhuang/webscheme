@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <pomVersion>3</pomVersion>
+  <artifactId>webscheme</artifactId>
+  <name>WebScheme</name>
+  <groupId>webscheme</groupId>
+  <currentVersion>0.7</currentVersion>
+  <organization>
+    <url>http://docs.telscenter.org/display/WS/Home</url>
+  </organization>
+  <inceptionYear>2002</inceptionYear>
+  <description>WebScheme is a toolkit for making web-based instructional interaction pages. It's really cool. You can use most any element in a typical HTML form, with some additions tailored for computer science (e.g., a syntax highlighting textbox). Scheme is the authoring language, and "macro" language, in the sense of setting up constraints between the interaction elements.</description>
+  <siteAddress>http://docs.telscenter.org/display/WS/Home</siteAddress>
+  <repository />
+  <mailingLists>
+    <mailingList>
+      <name>${pom.name} Dev List</name>
+      <subscribe>webscheme-devel-subscribe@ucdev.org</subscribe>
+      <unsubscribe>webscheme-devel-unsubscribe@ucdev.org</unsubscribe>
+      <archive>http://ucdev.org/mailman/listinfo/webscheme-devel</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} User List</name>
+      <archive>http://ucdev.org/pipermail/webscheme-users/</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>Turadg Aleahmad</name>
+      <id>1</id>
+      <email>turadg@berkeley.edu</email>
+      <url>http://tels.berkeley.edu/~turadg/</url>
+    </developer>
+  </developers>
+  <dependencies>
+    <dependency>
+      <groupId>xmlrpc</groupId>
+      <artifactId>xmlrpc</artifactId>
+      <version>1.2-b1</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <nagEmailAddress>turadg@berkeley.edu</nagEmailAddress>
+    <sourceDirectory>src</sourceDirectory>
+    <unitTestSourceDirectory>test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+    </unitTest>
+  </build>
+</project>
+
