@@ -1,6 +1,6 @@
 ;;;; WebScheme library functions
 
-(define ws-lib-ver "030723.1200")
+(define ws-lib-ver "030723.1230")
 (display "Loading WebScheme library (")
 (display ws-lib-ver)
 (display ")\n")
@@ -11,6 +11,7 @@
 (require-library "sisc/libs/srfi")
 (import srfi-13) ; string functions for assertions
 (import srfi-14)
+(import threading) ; for user dialogs
 
 ;; schemestring
 (define (schemestring s)
@@ -81,10 +82,13 @@
   (eval-javascript ws-data-model-obj (->jstring code)))
 
 ;; Present a Swing info box to the user
+;; (without blocking until they click OK)
 ;; .parameter message message to present
 (define
   (ws-tell-user message)
-  (show-message-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message)))
+  (let ((th (thread/new (lambda () (show-message-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message))) ) ))
+     (thread/start th) )
+)
 
 ;; Present a Swing query box to the user
 ;; .parameter message message to present
