@@ -1,129 +1,141 @@
 <project name="webscheme" default="dist">
-   <description>
+    <description>
    Builds the WebScheme jar
    </description>
 
-  <!-- set global properties for this build -->
-  <property name="src" location="src"/>
-  <property name="build" location="build"/>
-  <property name="dist"  location="dist"/>
-  <property name="debugging" value="on"/>
-  <property name="optimization" value="off"/>
-  <property name="jar.liveconnect" value="lib/liveconnect.jar" />
-  <property name="jar.sisc" value="lib/sisc.jar" />
-  <property name="jar.sisc-opt" value="lib/sisc-opt.jar" />
-  <property name="jar.sisc-lib" value="lib/sisc-lib.jar" />
-  <property name="jar.sisc-heap" value="lib/sisc-heap.jar" />
-  <property name="jar.jist" value="lib/jist.jar" />
-  <property name="jar.xmlrpc" value="lib/xmlrpc-1.2-b1.jar" />
-  <property name="webscheme.extensions" value="sisc.jar sisc-opt.jar sisc-lib.jar sisc-heap.jar xmlrpc-1.2-b1.jar jist.jar " />
-  <property name="webscheme.jarname" value="webscheme.jar" />
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist"  location="dist"/>
+    <property name="debugging" value="on"/>
+    <property name="optimization" value="off"/>
+    <property name="jar.liveconnect" value="lib/liveconnect.jar" />
+    <property name="jar.sisc" value="lib/sisc.jar" />
+    <property name="jar.sisc-opt" value="lib/sisc-opt.jar" />
+    <property name="jar.sisc-lib" value="lib/sisc-lib.jar" />
+    <property name="jar.sisc-heap" value="lib/sisc-heap.jar" />
+    <property name="jar.jist" value="lib/jist.jar" />
+    <property name="jar.xmlrpc" value="lib/xmlrpc-1.2-b1.jar" />
+    <property name="webscheme.extensions"
+              value="sisc.jar sisc-opt.jar sisc-lib.jar sisc-heap.jar xmlrpc-1.2-b1.jar jist.jar "
+     />
+    <property name="webscheme.jarname" value="webscheme.jar" />
 
-  <path id="webscheme.class.path">
-	<pathelement path="${classpath}"/>
-	<pathelement location="${jar.liveconnect}"/>
-	<pathelement location="${jar.xmlrpc}"/>
-	<pathelement location="${jar.jist}"/>
-	<pathelement location="${jar.sisc}"/>
-	<pathelement location="${jar.sisc-opt}"/>
-	<pathelement location="${jar.sisc-lib}"/>
-	<pathelement location="${jar.sisc-heap}"/>
-  </path>
+    <path id="webscheme.class.path">
+        <pathelement path="${classpath}"/>
+        <pathelement location="${jar.liveconnect}"/>
+        <pathelement location="${jar.xmlrpc}"/>
+        <pathelement location="${jar.jist}"/>
+        <pathelement location="${jar.sisc}"/>
+        <pathelement location="${jar.sisc-opt}"/>
+        <pathelement location="${jar.sisc-lib}"/>
+        <pathelement location="${jar.sisc-heap}"/>
+    </path>
 
-  <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-  </target>
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
 
-   <target name="compile" depends="init"
+    <target name="compile" depends="init"
         description="compile the source " >
-	<!-- Compile the java code from ${src} into ${build} -->
-    <javac
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac
         srcdir="${src}"
 	destdir="${build}"
 	debug="${debugging}"
 	optimize="${optimization}">
-    	<classpath refid="webscheme.class.path" />
-    </javac>
-  </target>
+            <classpath refid="webscheme.class.path" />
+        </javac>
+    </target>
 
-  <target name="dist" depends="compile"
+    <target name="dist" depends="compile"
         description="generate the distribution" >
 
-    <!-- Put the ws-lib into the build -->
-    <copy file="${src}/webscheme/wslib.scm" todir="${build}/webscheme"/>
+        <!-- Put the ws-lib into the build -->
+        <copy file="${src}/webscheme/wslib.scm" todir="${build}/webscheme"/>
 
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dist}"/>
-    
-    <!-- Copy library JARs into distribution dir -->
-    <copy todir="${dist}">
-      <fileset dir="lib"/>
-    </copy>
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}"/>
 
-    <!-- Put everything in ${build}/webscheme into the webscheme JAR -->
-    <jar destfile="${dist}/${webscheme.jarname}"
+        <!-- Copy library JARs into distribution dir -->
+        <copy todir="${dist}">
+            <fileset dir="lib"/>
+        </copy>
+
+        <!-- Put everything in ${build}/webscheme into the webscheme JAR -->
+        <jar destfile="${dist}/${webscheme.jarname}"
          basedir="${build}"
 	 includes="webscheme/">
-      <manifest>
-		<attribute name="Sealed" value="true"/>
- 		<attribute name="Built-By" value="${user.name}"/>
-		<!-- Include other jars as download extensions -->
-		<attribute name="Class-Path" value="${webscheme.extensions}"/>
-		<attribute name="Specification-Title" value="WebScheme"/>
-		<attribute name="Specification-Version" value="${DSTAMP}.${TSTAMP}"/>
-		<attribute name="Specification-Vendor" value="University of California, Berkeley"/>
-      </manifest>
-    </jar>
-  </target>
-  
-  <target name="sign-all" depends="dist"
+            <manifest>
+                <attribute name="Sealed" value="true"/>
+                <attribute name="Built-By" value="${user.name}"/>
+                <!-- Include other jars as download extensions -->
+                <attribute name="Class-Path" value="${webscheme.extensions}"/>
+                <attribute name="Specification-Title" value="WebScheme"/>
+                <attribute name="Specification-Version"
+                           value="${DSTAMP}.${TSTAMP}"
+                 />
+                <attribute name="Specification-Vendor"
+                           value="University of California, Berkeley"
+                 />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="sign-all" depends="dist"
         description="Sign the all the JARs">
-	<signjar alias="wise" storepass="wisepass">
-	  <fileset dir="${dist}"/>
-	</signjar>
-  </target>
+        <signjar alias="wise" storepass="wisepass">
+            <fileset dir="${dist}"/>
+        </signjar>
+    </target>
 
-  <!-- Put JARs on the developer web server -->
-  <target name="install" depends="dist"
+    <!-- Put JARs on the developer web server -->
+    <target name="install" depends="dist"
         description="Copy necessary JARs into developer's web tree">
-    <copy file="${dist}/${jist.jarname}" tofile="${user.home}/ucwise-html/jist/${jist.jarname}"/>
-    <copy file="${dist}/${webscheme.jarname}" tofile="${user.home}/ucwise-html/jist/${webscheme.jarname}"/>
-<!--    <copy file="${jar.httpcommons}" todir="${user.home}/ucwise-html/jist"/> -->
-<!--    <copy file="${jar.jaxp-api}" todir="${user.home}/ucwise-html/jist"/> -->
-    <copy file="${jar.sisc}" todir="${user.home}/ucwise-html/jist"/>
-    <copy file="${jar.sisc-opt}" todir="${user.home}/ucwise-html/jist"/>
-    <copy file="${jar.sisc-lib}" todir="${user.home}/ucwise-html/jist"/>
-    <copy file="${jar.sisc-heap}" todir="${user.home}/ucwise-html/jist"/>
-<!--    <copy file="${jar.xml-apis}" todir="${user.home}/ucwise-html/jist"/> -->
-    <copy file="${jar.xmlrpc}" todir="${user.home}/ucwise-html/jist"/>
-    <copy file="${jar.xmlrpc-applet}" todir="${user.home}/ucwise-html/jist"/>
-<!--    <copy file="${jar.webdavlib}" todir="${user.home}/ucwise-html/jist"/> -->
-<!--    <copy file="${jar.turtle}" todir="${user.home}/ucwise-html/jist"/> -->
-  </target>
-	
-  <!-- Clean all build files -->
-  <target name="clean"
+        <copy file="${dist}/${jist.jarname}"
+              tofile="${user.home}/ucwise-html/jist/${jist.jarname}"
+         />
+        <copy file="${dist}/${webscheme.jarname}"
+              tofile="${user.home}/ucwise-html/jist/${webscheme.jarname}"
+         />
+        <!--    <copy file="${jar.httpcommons}" todir="${user.home}/ucwise-html/jist"/> -->
+        <!--    <copy file="${jar.jaxp-api}" todir="${user.home}/ucwise-html/jist"/> -->
+        <copy file="${jar.sisc}" todir="${user.home}/ucwise-html/jist"/>
+        <copy file="${jar.sisc-opt}" todir="${user.home}/ucwise-html/jist"/>
+        <copy file="${jar.sisc-lib}" todir="${user.home}/ucwise-html/jist"/>
+        <copy file="${jar.sisc-heap}" todir="${user.home}/ucwise-html/jist"/>
+        <!--    <copy file="${jar.xml-apis}" todir="${user.home}/ucwise-html/jist"/> -->
+        <copy file="${jar.xmlrpc}" todir="${user.home}/ucwise-html/jist"/>
+        <copy file="${jar.xmlrpc-applet}"
+              todir="${user.home}/ucwise-html/jist"
+         />
+        <!--    <copy file="${jar.webdavlib}" todir="${user.home}/ucwise-html/jist"/> -->
+        <!--    <copy file="${jar.turtle}" todir="${user.home}/ucwise-html/jist"/> -->
+    </target>
+
+    <!-- Clean all build files -->
+    <target name="clean"
         description="clean up" >
-    <!-- Delete the ${build} and ${dist} directory trees -->
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
-  </target>
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
 
-  <target name="install-wise" depends="dist"
+    <target name="install-wise" depends="dist"
         description="Copy necessary JARs into tels-develop web tree">
-    <property name="wise.server" value="tels-develop.soe.berkeley.edu"/>
-    <property name="wise.dir" value="~/wise2-html/modules/webscheme/lib"/>
-    <exec executable="scp">
-      <arg value="dist/*.jar"/>
-      <arg value="${wise.server}:${wise.dir}"/>
-    </exec>
-  </target>
+        <property name="wise.server" value="tels-develop.soe.berkeley.edu"/>
+        <property name="wise.dir" value="~/wise2-html/modules/webscheme/lib"/>
+        <exec executable="scp">
+            <arg value="dist/*.jar"/>
+            <arg value="${wise.server}:${wise.dir}"/>
+        </exec>
+    </target>
 
-  <target name="install-wise-signed" depends="sign-all,install-wise"
+    <target name="install-wise-signed" depends="sign-all,install-wise"
         description="Copy signed JARs into tels-develop web tree">
-  </target>
-  
+    </target>
+
 </project>
