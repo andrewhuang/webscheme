@@ -112,12 +112,10 @@ public class SchemeHandler extends JApplet {
         try {
             readEvents();
             initSchemeEnv();
-            // FIX disabled until XML-RPC works again
-            //		initWise();
+            initWise();
             loadFiles();
             evaluateQuiet(initExpression);
             //		restoreDocumentState();
-
         } catch (RuntimeException e) {
             setStatus(STATUS_ERROR);
             e.printStackTrace();
