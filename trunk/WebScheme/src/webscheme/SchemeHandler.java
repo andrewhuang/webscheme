@@ -60,7 +60,7 @@ public class SchemeHandler extends JApplet {
 	StateStore stateStore;
 
 	public SchemeHandler() {
-		getContentPane().add(new java.awt.Label("SchemeHandler"));
+		getContentPane().setBackground(java.awt.Color.red);
 	}
 
 	public void init() {
@@ -72,7 +72,6 @@ public class SchemeHandler extends JApplet {
 				try {
 					// enabling interrupts
 					System.setProperty("sisc.permitInterrupts", "true");
-					System.err.println("interrupts enabled");
 				} catch (AccessControlException ex) {
 					System.err.println("WARNING: could not enable interrupts");
 				}
@@ -95,7 +94,11 @@ public class SchemeHandler extends JApplet {
 		loadFiles();
 		evaluateQuiet(getParameter("init-expr"));
 		restoreDocumentState();
+
 		System.out.println("SchemeHandler ready");
+		java.awt.Container b = getContentPane();
+		b.setBackground(java.awt.Color.green);
+		b.add(new java.awt.Label("SchemeHandler"));
 	}
 
 	public StateStore getStateStore() {
@@ -120,13 +123,11 @@ public class SchemeHandler extends JApplet {
 		System.out.println(" done.");
 		// load ws-lib
 		String baseURL = getCodeBase().toString();
-		System.out.println("(current-url \"" + baseURL + "\")");
 		evaluateQuiet("(current-url \"" + baseURL + "\")");
 		evaluateQuiet("(import libraries)");
 
 		// produce some debugging output
-		evaluateQuiet("(with/fc (lambda (m e) (print-exception (make-exception m e)))   (lambda () (require-library \"webscheme/wslib\") ))");
-		// 	evaluateQuiet("(require-library \"webscheme/wslib\")");
+		evaluateQuiet("(require-library \"webscheme/wslib\")");
 
 		Context.exit();
 	}
@@ -201,8 +202,12 @@ public class SchemeHandler extends JApplet {
 		}
 
 		try {
-			// 	    printPermStatus("SchemeHandler.evaluateQuiet()");
-			interpreter.eval(sexpression);
+			System.out.println("evaluateQuiet: " + sexpression);
+			String wrapped =
+				"(with/fc (lambda (m e) (print-exception (make-exception m e)))   (lambda () "
+					+ sexpression
+					+ " ))";
+			interpreter.eval(wrapped);
 		} catch (Exception ex) {
 			System.err.println(ex);
 		}
