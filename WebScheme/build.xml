@@ -14,20 +14,21 @@
   <property name="jar.sisc" value="lib/sisc.jar" />
   <property name="jar.sisc-opt" value="lib/sisc-opt.jar" />
   <property name="jar.sisc-lib" value="lib/sisc-lib.jar" />
-  <property name="jar.sisc-heap" value="lib/sisc-heap.shp" />
-  <property name="jar.ucwise" value="lib/ucwise.jar" />
+  <property name="jar.sisc-heap" value="lib/sisc-heap.jar" />
+  <property name="jar.jist" value="lib/jist.jar" />
   <property name="jar.xmlrpc" value="lib/xmlrpc-1.2-b1.jar" />
-  <property name="webscheme.extensions" value="sisc.jar sisc-opt.jar sisc-lib.jar sisc-heap.jar xmlrpc-1.2-b1.jar ucwise.jar " />
+  <property name="webscheme.extensions" value="sisc.jar sisc-opt.jar sisc-lib.jar sisc-heap.jar xmlrpc-1.2-b1.jar jist.jar " />
   <property name="webscheme.jarname" value="webscheme.jar" />
 
   <path id="webscheme.class.path">
 	<pathelement path="${classpath}"/>
 	<pathelement location="${jar.liveconnect}"/>
 	<pathelement location="${jar.xmlrpc}"/>
-	<pathelement location="${jar.ucwise}"/>
+	<pathelement location="${jar.jist}"/>
 	<pathelement location="${jar.sisc}"/>
 	<pathelement location="${jar.sisc-opt}"/>
 	<pathelement location="${jar.sisc-lib}"/>
+	<pathelement location="${jar.sisc-heap}"/>
   </path>
 
   <target name="init">
@@ -76,7 +77,7 @@
   <!-- Put JARs on the developer web server -->
   <target name="install" depends="dist"
         description="Copy necessary JARs into developer's web tree">
-    <copy file="${dist}/${ucwise.jarname}" tofile="${user.home}/ucwise-html/jist/${ucwise.jarname}"/>
+    <copy file="${dist}/${jist.jarname}" tofile="${user.home}/ucwise-html/jist/${jist.jarname}"/>
     <copy file="${dist}/${webscheme.jarname}" tofile="${user.home}/ucwise-html/jist/${webscheme.jarname}"/>
 <!--    <copy file="${jar.httpcommons}" todir="${user.home}/ucwise-html/jist"/> -->
 <!--    <copy file="${jar.jaxp-api}" todir="${user.home}/ucwise-html/jist"/> -->
