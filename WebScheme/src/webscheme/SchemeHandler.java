@@ -48,7 +48,7 @@ public class SchemeHandler extends JApplet {
 	final Map events = new HashMap();
 
 	/** seconds for the WebScheme evaluation timeout */
-	static int timeoutDelay = 3;
+	static int timeoutDelay = 2;
 	/** the message to show upon evaluation timeout */
 	static String timeoutMessage = "Scheme evaluation exceed time limit";
 
@@ -410,6 +410,7 @@ public class SchemeHandler extends JApplet {
 			ActionListener timeoutAction = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					interpreter.tctx.interrupt = true;
+					System.gc();  // try to clean up after likely infinite recursion
 					JOptionPane.showMessageDialog(
 						null,
 						timeoutMessage,
