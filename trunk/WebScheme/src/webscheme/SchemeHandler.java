@@ -133,8 +133,8 @@ public class SchemeHandler extends JApplet {
 		// 	Defaults.permitinterrupts = "true"; // necessary for time-out interrupts
 		AppContext ctx = new AppContext();
 		Context.register(WEBSCHEME_CONTEXT, ctx);
-		interpreter = Context.enter(WEBSCHEME_CONTEXT);
-		REPL.initializeInterpreter(interpreter, new String[0], heap);
+		interpreter = Context.enter(ctx);
+		REPL.loadHeap(interpreter, heap);
 		System.out.println(" done.");
 		// load ws-lib
 		String baseURL = getCodeBase().toString();
@@ -240,15 +240,14 @@ public class SchemeHandler extends JApplet {
 	 * 	@return the filled-out template 
 	 */
 	String fillTemplate(Template template) {
-		/*
 		System.out.println("fillTemplate() on:\n  " + template);
 		System.out.println("  with symbols:\n" + template.symbols());
-		*/
+
 		Map inputMap = mapInputs(template.symbols());
 		String full = template.fill(inputMap);
-		/*
+
 		System.out.println("fillTemplate() returning: " + full);
-		*/
+
 		return full;
 	}
 
