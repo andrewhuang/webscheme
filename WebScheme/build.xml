@@ -112,17 +112,4 @@
     </exec>
   </target>
 
-  <!-- Put JARs on the ucdev server -->
-  <target name="install-ucdev" depends="dist"
-        description="Copy necessary JARs into wise-develop web tree">
-    <property name="ucdev.server" value="ucdev.org"/>
-    <property name="ucdev.dir" value="~/ucwise-html/jist"/>
-    <exec executable="scp">
-      <arg value="dist/*.jar"/>
-      <arg value="lib/*.jar"/>
-      <arg value="${ucdev.server}:${ucdev.dir}"/>
-    </exec>
-  </target>
-
-
 </project>
