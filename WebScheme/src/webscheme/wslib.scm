@@ -1,6 +1,6 @@
 ;;;; WebScheme library functions
 
-(define ws-lib-ver "030723.1230")
+(define ws-lib-ver "030723.1300")
 (display "Loading WebScheme library (")
 (display ws-lib-ver)
 (display ")\n")
@@ -177,25 +177,36 @@
 (display "test string-length (3): ")(display (string-length "( ("))(display "\n")
 
 (define-generic ws-assert-length)
-;; Assert that the length of the field is exactly "length"
-;; .returns #t if the specified field contains a string of length 'length'
-(define (ws-assert-length id length)
-  (= (string-length (ws-get-string id)) length))
+;; Assert that the length of the field or string is exactly "length"
+;; .returns #t if the specified field or string is of length 'length'
+(define (ws-assert-length id-or-string length)
+  (let ((str (ws-get-or-keep-string id-or-string)))
+    (= (string-length str) length)
+    )
+  )
 
 ;; Assert that the length of the field is at minumum "length"
-;; .returns #t if the specified field contains a string no shorter than 'length'
-(define (ws-assert-minlength id length)
-  (>= (string-length (ws-get-string id)) length))
+;; .returns #t if the specified field or string is no shorter than 'length'
+(define (ws-assert-minlength id-or-string length)
+  (let ((str (ws-get-or-keep-string id-or-string)))
+    (>= (string-length str) length)
+    )
+  )
 
 ;; Assert that the length of the field is at maximum "length"
-;; .returns #t if the specified field contains a string no longer than 'length'
-(define (ws-assert-maxlength id length)
-  (<= (string-length (ws-get-string id)) length))
+;; .returns #t if the specified field or string is no longer than 'length'
+(define (ws-assert-maxlength id-or-string length)
+  (let ((str (ws-get-or-keep-string id-or-string)))
+    (<= (string-length str) length)
+    )
+  )
 
 ;; Assert that the field contains a number
 ;; .returns #t if the specified field contains a number
-(define (ws-assert-number id)
-  (number? (string->number (ws-get-string id))))
+(define (ws-assert-number id-or-string)
+  (let ((str (ws-get-or-keep-string id-or-string)))
+    (number? (string->number str)))
+  )
 
 ; FIX sisc bug
 ; using it here helps somehow
@@ -207,15 +218,17 @@
   (- (string-count s #\( )
      (string-count s #\) )))
 
-;; Assert that the field has "diff" more open than close parens
-;; .returns #t if the specified field contains "diff" more open than close parens
-(define (ws-assert-imbalanced id diff)
-  (= diff (string-count-unclosed (ws-get-string id))))
+;; Assert that the field string has "diff" more open than close parens
+;; .returns #t if the specified field or string contains "diff" more open than close parens
+(define (ws-assert-imbalanced id-or-string diff)
+  (let ((str (ws-get-or-keep-string id-or-string)))
+    (= diff (string-count-unclosed str)))
+  )
 
-;; Assert that the field has as many open as close parens
-;; .returns #t if the specified field contains as many open as close parens
-(define (ws-assert-balanced id)
-  (ws-assert-imbalanced id 0))
+;; Assert that the field or string has as many open as close parens
+;; .returns #t if the specified field or string contains as many open as close parens
+(define (ws-assert-balanced id-or-string)
+  (ws-assert-imbalanced id-or-string 0))
 
 
 ;;; Logging
