@@ -1,25 +1,34 @@
-/** StateStore
-
-    @author Turadg
-*/
+/**
+ * StateStore
+ * 
+ * @author Turadg
+ */
 
 package webscheme.wise;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
-import webscheme.*;
-import webscheme.dom.*;
+import org.apache.xmlrpc.XmlRpcClient;
 
-import org.apache.xmlrpc.*;
-
-import sisc.data.*;
+import sisc.data.Pair;
+import sisc.data.SchemeString;
+import webscheme.SchemeUtil;
+import webscheme.dom.DataModel;
 
 public class StateStore {
 
 	XmlRpcClient client;
+
 	Integer groupID;
+
 	Integer pageID;
+
 	DataModel dataModel;
+
 	Map toSave;
 
 	boolean inWise = false;
@@ -64,8 +73,8 @@ public class StateStore {
 		} else if (attr instanceof SchemeString) {
 			attrStr = ((SchemeString) attr).asString();
 		} else {
-			System.err.println(
-				"unrecognized type " + attr + " (" + attr.getClass() + ")");
+			System.err.println("unrecognized type " + attr + " ("
+					+ attr.getClass() + ")");
 		}
 		fs.includeAttribute(attrStr);
 	}
@@ -111,12 +120,8 @@ public class StateStore {
 				Object id = i.next();
 				String restoreMethods = (String) stateTable.get(id);
 				System.out.println("[" + id + " restore]");
-				String restoreScript =
-					"with (document.getElementById(\""
-						+ id
-						+ "\")) {\n"
-						+ restoreMethods
-						+ "}\n";
+				String restoreScript = "with (document.getElementById(\"" + id
+						+ "\")) {\n" + restoreMethods + "}\n";
 				dataModel.evalJavascript(restoreScript);
 			}
 		} catch (Exception ex) {

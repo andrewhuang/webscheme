@@ -1,17 +1,22 @@
-/** FieldSpecifier
-
-    @author Turadg
-*/
+/**
+ * FieldSpecifier
+ * 
+ * @author Turadg
+ */
 
 package webscheme.wise;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import webscheme.dom.*;
+import webscheme.dom.DataModel;
+import webscheme.dom.ObjectElement;
 
 class FieldSpecifier {
 
 	String id;
+
 	Set attrs;
 
 	protected FieldSpecifier(String fieldId) {
@@ -32,8 +37,8 @@ class FieldSpecifier {
 		Iterator i = attrs.iterator();
 		while (i.hasNext()) {
 			String attr = (String) i.next();
-			SmartJSO sjso = dm.getSmartJsoById(id);
-			String restoreMethod = sjso.getRestoreMethod(attr);
+			ObjectElement oe = dm.getObjectElementById(id);
+			String restoreMethod = oe.getRestoreMethod(attr);
 
 			script.append(restoreMethod);
 			script.append(";\n");
