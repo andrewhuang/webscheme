@@ -94,11 +94,26 @@ public class SchemeHandler extends JApplet {
 		loadFiles();
 		evaluateQuiet(getParameter("init-expr"));
 		restoreDocumentState();
+	}
 
+	public void start() {
 		System.out.println("SchemeHandler ready");
 		java.awt.Container b = getContentPane();
 		b.setBackground(java.awt.Color.green);
 		b.add(new java.awt.Label("SchemeHandler"));
+
+		initLiveconnect();
+	}
+
+	/**
+	 * Evaluate Javascript from Java to initiate LiveConnect (Javascript *to* Java communication)
+	 * 
+	 * PRECONDITION: init() has completed
+	 */
+	void initLiveconnect() {
+		// FIX use the "id" of this applet in the DOM
+		dataModel.evalJavascript(
+			"document.getElementById(\"SchemeHandler\").noop();");
 	}
 
 	public StateStore getStateStore() {
@@ -125,8 +140,6 @@ public class SchemeHandler extends JApplet {
 		String baseURL = getCodeBase().toString();
 		evaluateQuiet("(current-url \"" + baseURL + "\")");
 		evaluateQuiet("(import libraries)");
-
-		// produce some debugging output
 		evaluateQuiet("(require-library \"webscheme/wslib\")");
 
 		Context.exit();
@@ -203,11 +216,7 @@ public class SchemeHandler extends JApplet {
 
 		try {
 			System.out.println("evaluateQuiet: " + sexpression);
-			String wrapped =
-				"(with/fc (lambda (m e) (print-exception (make-exception m e)))   (lambda () "
-					+ sexpression
-					+ " ))";
-			interpreter.eval(wrapped);
+			interpreter.eval(sexpression);
 		} catch (Exception ex) {
 			System.err.println(ex);
 		}
@@ -282,14 +291,6 @@ public class SchemeHandler extends JApplet {
 		String name,
 		String assertionsdef,
 		String templatedef) {
-		/*
-		System.out.println("[ start event " + name + " ]");
-		System.out.print("  [assertions] ");
-		System.out.println(assertionsdef);
-		System.out.print("  [template] ");
-		System.out.println(templatedef);
-		System.out.println("[ end ]");
-		*/
 		webscheme.events.Event event =
 			new webscheme.events.Event(name, assertionsdef, templatedef);
 		events.put(name, event);
@@ -347,21 +348,35 @@ public class SchemeHandler extends JApplet {
 		System.err.println("\n\nsetJSError( " + s + " )");
 	}
 
+	/** Dummy method called by Javascript to initiate LiveConnect
+	 * 
+	 */
+	public void noop() {
+		System.out.println("noop");
+	}
+	
+	/**
+	 * Set the number of seconds to evaluate before aborting
+	 * @param timeout in seconds
+	 */
+	public void setTimeoutDelay(int newDelay) {
+		EvaluationThread.timeoutDelay = newDelay;
+	}
+	
+	/**
+	 * Set the message to display when evaluation times out
+	 * @param message to display
+	 */
+	public void setTimeoutMessage(String newMessage) {
+		EvaluationThread.timeoutMessage = newMessage;
+	}
+	
 	/** Evaluate the given s-expression
 	 * 	
 	 * @param sexp s-expression to evaluate
 	 */
 	void evaluate(String sexp) {
-		int timeoutDelay;
-		try {
-			Value timeoutDelayVal = interpreter.eval(TIMEOUT_DELAY_SYM);
-			timeoutDelay = ((Quantity) timeoutDelayVal).intValue();
-		} catch (Exception ex) {
-			System.err.println(TIMEOUT_DELAY_SYM + " undefined");
-			timeoutDelay = 30;
-		}
-		EvaluationThread et =
-			new EvaluationThread(interpreter, sexp, timeoutDelay);
+		EvaluationThread et = new EvaluationThread(interpreter, sexp);
 		et.start();
 	}
 
@@ -371,31 +386,20 @@ public class SchemeHandler extends JApplet {
 	 * 	@author Turadg
 	 */
 	class EvaluationThread extends Thread {
+		static int timeoutDelay;
+		static String timeoutMessage = "Scheme evaluation exceed time limit";
+
 		final Interpreter interpreter;
 		final javax.swing.Timer timer;
 		final String sexpression; // to evaluate
 
-		public EvaluationThread(Interpreter i, String s, int t) {
+		public EvaluationThread(Interpreter i, String s) {
 			super();
 			interpreter = i;
 			sexpression = s;
 
 			ActionListener timeoutAction = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String timeoutMessage;
-					try {
-						Value timeoutMessageVal =
-							interpreter.eval(TIMEOUT_MESSAGE_SYM);
-						timeoutMessage =
-							((SchemeString) timeoutMessageVal).asString();
-					} catch (Exception ex) {
-						System.err.println(TIMEOUT_MESSAGE_SYM + " undefined");
-						timeoutMessage =
-							"Scheme evaluation time exceeded limit of "
-								+ timer.getInitialDelay() / 1000
-								+ " seconds";
-					}
-
 					interpreter.tctx.interrupt = true;
 					JOptionPane.showMessageDialog(
 						null,
@@ -407,7 +411,7 @@ public class SchemeHandler extends JApplet {
 				}
 			};
 
-			timer = new javax.swing.Timer(t * 1000, timeoutAction);
+			timer = new javax.swing.Timer(timeoutDelay * 1000, timeoutAction);
 			timer.setRepeats(false);
 
 			// nice it

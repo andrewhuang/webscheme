@@ -33,6 +33,10 @@
 ; Discover referenced methods
 ; This ensures that Reflection is used during applet
 ; initialization while permission is available
+(define-generic set-timeout-delay)
+(applicable-methods set-timeout-delay (list <SchemeHandler>))
+(define-generic set-timeout-message)
+(applicable-methods set-timeout-message (list <SchemeHandler>))
 (define-generic show-message-dialog)
 (applicable-methods show-message-dialog (list <JOptionPane>))
 (define-generic show-input-dialog)
@@ -84,19 +88,15 @@
   (->string (show-input-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message))))
 
 
-; FIX keep this value in Java and make a method to set it
-(define ws-timeout-delay 3)
 ;; Set WebScheme timeout delay
 ;; .parameter seconds seconds until timeout
 (define (ws-set-timeout-delay! seconds)
-  (set! ws-timeout-delay seconds)) ; evaluation queries this before beginning
+  (set-timeout-delay (->jint seconds))
 
-;; ws-set-timeout-message
-(define ws-timeout-message 3)
 ;; Set WebScheme timeout message
 ;; .parameter message to deliver on timeout
 (define (ws-set-timeout-message! str)
-  (set! ws-timeout-message str)) ; evaluation display this if it times out
+  (set-timeout-message (->jstring str))
 
 
 ;;; Fields
@@ -141,9 +141,7 @@
 
 ; FIX sisc bug
 ; using it here helps somehow
-(display "test string-length (3): ")
-(display (string-length "( ("))
-(display "\n")
+(display "test string-length (3): ")(display (string-length "( ("))(display "\n")
 
 ;; Assert that the length of the field is exactly "length"
 ;; .returns #t if the specified field contains a string of length 'length'
