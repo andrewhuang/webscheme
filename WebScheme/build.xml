@@ -87,7 +87,7 @@
 
     <target name="sign-all" depends="dist"
         description="Sign the all the JARs">
-        <signjar alias="wise" storepass="wisepass">
+        <signjar alias="wise" storepass="wisepass" lazy="yes">
             <fileset dir="${dist}"/>
         </signjar>
     </target>
