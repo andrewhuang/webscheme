@@ -5,8 +5,8 @@
 (display ws-lib-ver)
 (display ")\n")
 
-(import old-generic-procedures)
-(import old-s2j)
+(import generic-procedures)
+(import s2j)
 (import libraries)
 (require-library 'sisc/libs/srfi)
 (import srfi-13) ; string functions for assertions
@@ -31,43 +31,35 @@
 		     (proc (vector-ref vec index))))))
 
 ; Define referenced classes
-(define <SchemeHandler> (java-class "webscheme.SchemeHandler"))
-(define <DataModel> (java-class "webscheme.dom.DataModel"))
-(define <Logger> (java-class "webscheme.wise.Logger"))
-(define <StateStore> (java-class "webscheme.wise.StateStore"))
-(define <JOptionPane> (java-class "javax.swing.JOptionPane"))
+(define-java-classes
+  (<SchemeHandler> |webscheme.SchemeHandler|)
+  (<DataModel> |webscheme.dom.DataModel|)
+  (<Logger> |webscheme.wise.Logger|)
+  (<StateStore> |webscheme.wise.StateStore|)
+  (<JOptionPane> |javax.swing.JOptionPane|)
+  )
 
 ; Discover referenced methods
 ; This ensures that Reflection is used during applet
 ; initialization while permission is available
-(define-generic set-timeout-delay)
-(applicable-methods set-timeout-delay (list <SchemeHandler>))
-(define-generic set-timeout-message)
-(applicable-methods set-timeout-message (list <SchemeHandler>))
-(define-generic show-message-dialog)
-(applicable-methods show-message-dialog (list <JOptionPane>))
-(define-generic show-input-dialog)
-(applicable-methods show-input-dialog (list <JOptionPane>))
-(define-generic set-string)
-(applicable-methods set-string (list <DataModel>))
-(define-generic get-string)
-(applicable-methods get-string (list <DataModel>))
-(define-generic eval-javascript)
-(applicable-methods eval-javascript (list <DataModel>))
-(define-generic push)
-(applicable-methods push (list <Logger>))
-(define-generic include)
-(applicable-methods include (list <StateStore>))
-(define-generic get-queue)
-(applicable-methods get-queue (list <Logger>))
-
+(define-generic-java-methods
+  set-timeout-delay
+  set-timeout-message
+  show-message-dialog
+  show-input-dialog
+  set-string
+  get-string
+  eval-javascript
+  push
+  include
+  get-queue)
 
 ; ; ws-xmlrpc-execute
 ;(define <XmlRpcClient> (java-class-of ws-xmlrpc-obj))
-;(define-generic execute)
+;(define-generic-java-method  execute)
 ;(for-each
 ; (lambda (class)
-;   (applicable-methods execute (list class)))
+;   ;;(applicable-methods execute (list class)))
 ; (list <XmlRpcClient>))
 ;(define
 ;  (ws-xmlrpc-execute method-name values)
