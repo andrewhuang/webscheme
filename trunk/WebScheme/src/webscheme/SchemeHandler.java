@@ -149,12 +149,6 @@ public class SchemeHandler extends JApplet {
 		interpreter = Context.enter(ctx);
 		REPL.loadHeap(interpreter, heap);
 		System.out.println(" done.");
-		// load ws-lib
-		String baseURL = getCodeBase().toString();
-		evaluateQuiet("(current-url \"" + baseURL + "\")");
-		evaluateQuiet("(import libraries)");
-		evaluateQuiet("(require-library 'webscheme/wslib)");
-
 		Context.exit();
 	}
 
@@ -174,6 +168,12 @@ public class SchemeHandler extends JApplet {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// load ws-lib
+		String baseURL = getCodeBase().toString();
+		evaluateQuiet("(current-url \"" + baseURL + "\")");
+		evaluateQuiet("(import libraries)");
+		evaluateQuiet("(require-library 'webscheme/wslib)");
 	}
 
 	void initWise() {
