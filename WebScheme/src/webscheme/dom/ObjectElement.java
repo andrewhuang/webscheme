@@ -1,17 +1,23 @@
 /**
-   ObjectElement
-   
-   Methods that an OBJECT must implement to be used by DataHandler and SmartJSO
-  
-   @author Turadg
-*/
+ * ObjectElement
+ * 
+ * Methods that an OBJECT must implement to be used by DataHandler and SmartJSO
+ * 
+ * @author Turadg
+ */
 
 package webscheme.dom;
 
-interface ObjectElement {
+public interface ObjectElement {
 
-	public void setString(String s);
+	/**
+	 * @param attr
+	 * @return
+	 */
+	public String getRestoreMethod(String attr);
 
 	public String getString();
+
+	public void setString(String s);
 
 }

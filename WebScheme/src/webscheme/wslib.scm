@@ -1,6 +1,6 @@
 ;;;; WebScheme library functions
 
-(define ws-lib-ver "030723.1300")
+(define ws-lib-ver "040527.1445")
 (display "Loading WebScheme library (")
 (display ws-lib-ver)
 (display ")\n")
@@ -12,6 +12,8 @@
 (import srfi-13) ; string functions for assertions
 (import srfi-14)
 (import threading) ; for user dialogs
+
+(display "..completed imports\n")
 
 ;; schemestring
 (define (schemestring s)
@@ -78,8 +80,7 @@
 ;; .parameter message message to present
 (define
   (ws-tell-user message)
-  (let ((th (thread/new (lambda () (show-message-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message))) ) ))
-     (thread/start th) )
+  (thread/spawn (lambda () (show-message-dialog <JOptionPane> (java-null <JOptionPane>) (->jstring message))) )
 )
 
 ;; Present a Swing query box to the user

@@ -1,17 +1,20 @@
 /**
- 	SchemeUtil
-
-	Some methods of widespread utility
-
-   @author Turadg
-*/
+ * SchemeUtil
+ * 
+ * Some methods of widespread utility
+ * 
+ * @author Turadg
+ */
 
 package webscheme;
 
-import java.util.*;
+import java.util.Vector;
 
-import sisc.data.*;
-import sisc.util.*;
+import sisc.data.Pair;
+import sisc.data.Quantity;
+import sisc.data.SchemeString;
+import sisc.data.Value;
+import sisc.util.Util;
 
 public class SchemeUtil {
 
@@ -26,12 +29,8 @@ public class SchemeUtil {
 			} else if (val instanceof SchemeString) {
 				o = ((SchemeString) val).asString();
 			} else {
-				System.err.println(
-					"Undefined Scheme conversion: "
-						+ val
-						+ " ("
-						+ val.getClass()
-						+ ")");
+				System.err.println("Undefined Scheme conversion: " + val + " ("
+						+ val.getClass() + ")");
 				o = new String("UNKNOWN");
 			}
 
