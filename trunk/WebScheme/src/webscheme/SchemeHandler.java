@@ -66,11 +66,17 @@ public class SchemeHandler extends JApplet {
     /** for communication with persistent storage of page state */
     StateStore stateStore;
 
+    private static final int STATUS_LOADING = 0;
+    private static final int STATUS_READY = 1;
+    private static final int STATUS_ERROR = 2; 
+    private int status;
+    
     public SchemeHandler() {
-        getContentPane().setBackground(java.awt.Color.red);
+        super();
     }
 
     public void init() {
+        setStatus(STATUS_LOADING);
         printVersions();
         printPermStatus("SchemeHandler init()");
 
@@ -96,13 +102,37 @@ public class SchemeHandler extends JApplet {
                 ex.printStackTrace();
                 return;
             }
-        readEvents();
-        initSchemeEnv();
-        // FIX disabled until XML-RPC works again
-        //		initWise();
-        loadFiles();
-        evaluateQuiet(getParameter("init-expr"));
-        //		restoreDocumentState();
+        try {
+            readEvents();
+            initSchemeEnv();
+            // FIX disabled until XML-RPC works again
+            //		initWise();
+            loadFiles();
+            evaluateQuiet(getParameter("init-expr"));
+            //		restoreDocumentState();
+
+        } catch (RuntimeException e) {
+            setStatus(STATUS_ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param error
+     */
+    private void setStatus(int newStatus) {
+        this.status = newStatus;
+        java.awt.Container b = getContentPane();
+        switch (this.status) {
+        case STATUS_READY:
+            b.setBackground(java.awt.Color.green);
+            b.add(new java.awt.Label("SchemeHandler"));
+            break;
+        case STATUS_ERROR:
+            b.setBackground(java.awt.Color.red);
+            b.add(new java.awt.Label("ERROR"));
+            break;
+        }
     }
 
     /**
@@ -115,12 +145,13 @@ public class SchemeHandler extends JApplet {
     }
 
     public void start() {
+        if (status == STATUS_ERROR) return;
+        
         System.out.println("SchemeHandler ready");
-        java.awt.Container b = getContentPane();
-        b.setBackground(java.awt.Color.green);
-        b.add(new java.awt.Label("SchemeHandler"));
 
         initLiveconnect();
+
+        setStatus(STATUS_READY);
     }
 
     /**
@@ -130,7 +161,7 @@ public class SchemeHandler extends JApplet {
      * PRECONDITION: init() has completed
      */
     void initLiveconnect() {
-        // FIX use the "id" of this applet in the DOM
+        // FIX use the "id" of this applet instance in the DOM
         dataModel
                 .evalJavascript("document.getElementById(\"SchemeHandler\").noop();");
     }
@@ -441,7 +472,7 @@ public class SchemeHandler extends JApplet {
                 public void actionPerformed(ActionEvent e) {
                     interpreter.tctx.interrupt = true;
                     System.gc(); // try to clean up after likely infinite
-                                 // recursion
+                    // recursion
                     JOptionPane.showMessageDialog(null, timeoutMessage,
                             "Evaluation aborted after "
                                     + timer.getInitialDelay() / 1000
