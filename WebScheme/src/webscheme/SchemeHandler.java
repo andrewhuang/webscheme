@@ -67,18 +67,25 @@ public class SchemeHandler extends JApplet {
     StateStore stateStore;
 
     private static final int STATUS_LOADING = 0;
+
     private static final int STATUS_READY = 1;
-    private static final int STATUS_ERROR = 2; 
+
+    private static final int STATUS_ERROR = 2;
+
     private int status;
-    
-    public SchemeHandler() {
-        super();
-    }
+
+    private String initExpression;
 
     public void init() {
         setStatus(STATUS_LOADING);
         printVersions();
         printPermStatus("SchemeHandler init()");
+
+        initExpression = getParameter("init-expr");
+        if (initExpression == null) {
+            setStatus(STATUS_ERROR);
+            throw new RuntimeException("required applet parameter absent");
+        }
 
         // FIX create a reset-interpreter PARAM command
         if (interpreter != null)
@@ -108,7 +115,7 @@ public class SchemeHandler extends JApplet {
             // FIX disabled until XML-RPC works again
             //		initWise();
             loadFiles();
-            evaluateQuiet(getParameter("init-expr"));
+            evaluateQuiet(initExpression);
             //		restoreDocumentState();
 
         } catch (RuntimeException e) {
@@ -146,7 +153,7 @@ public class SchemeHandler extends JApplet {
 
     public void start() {
         if (status == STATUS_ERROR) return;
-        
+
         System.out.println("SchemeHandler ready");
 
         initLiveconnect();
@@ -155,15 +162,16 @@ public class SchemeHandler extends JApplet {
     }
 
     /**
-     * Evaluate Javascript from Java to initiate LiveConnect (Javascript *to*
-     * Java communication)
+     * Evaluate Javascript from Java to initiate LiveConnect (Javascript <i>to
+     * </i> Java communication)
      * 
      * PRECONDITION: init() has completed
      */
     void initLiveconnect() {
         // FIX use the "id" of this applet instance in the DOM
-        dataModel
-                .evalJavascript("document.getElementById(\"SchemeHandler\").noop();");
+        String jsCall = "getSchemeHandler().confirmLiveConnect();";
+        dataModel.evalJavascript(jsCall);
+        // FIX wait for confirmLiveConnect(); throw error if times out
     }
 
     public StateStore getStateStore() {
@@ -334,8 +342,8 @@ public class SchemeHandler extends JApplet {
     }
 
     /**
-     * Search web page for the requisite symbols and return a mapping of
-     * symbols to their values on the page
+     * Search web page for the requisite symbols and return a mapping of symbols
+     * to their values on the page
      * 
      * @return Map of inputs to value
      */
@@ -413,8 +421,8 @@ public class SchemeHandler extends JApplet {
      * Dummy method called by Javascript to initiate LiveConnect
      *  
      */
-    public void noop() {
-        System.out.println("noop");
+    public void confirmLiveConnect() {
+        System.out.println("LiveConnect confirmed");
     }
 
     /**
