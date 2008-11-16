@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry sourcepath="/sisc/src" kind="lib" path="lib/sisc.jar"/>
+	<classpathentry kind="lib" path="lib/sisc-heap.jar"/>
+	<classpathentry kind="lib" path="lib/sisc-lib.jar"/>
+	<classpathentry kind="lib" path="lib/sisc-opt.jar"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xmlrpc/jars/xmlrpc-1.2-b1.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
