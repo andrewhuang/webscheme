@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <pomVersion>3</pomVersion>
+  <artifactId>jist</artifactId>
+  <name>JIST</name>
+  <groupId>jist</groupId>
+  <currentVersion>0.9</currentVersion>
+  <organization>
+    <name>TELS Center</name>
+    <url>http://www.telscenter.org/</url>
+    <logo>http://www.telscenter.org/images/logo_home.jpg</logo>
+  </organization>
+  <inceptionYear>2002</inceptionYear>
+  <package>jist</package>
+  <description>    &lt;h2&gt;About&lt;/h2&gt;
+
+	&lt;p class="paragraph"&gt;
+	JIST was created to support Scheme instruction in &lt;a href="http://www.berkeley.edu/"&gt;UC Berkeley&lt;/a&gt;'s &lt;a href="http://www-inst.eecs.berkeley.edu/~cs3/"&gt;CS3&lt;/a&gt; introductory computer science course.
+	It is integrated in the &lt;a href="http://www.ucwise.org/"&gt;UC-WISE&lt;/a&gt; Course Portal, providing a Scheme interpreter and editor within the learner's web browser.
+	 &lt;/p&gt;
+
+    &lt;h2&gt;Demonstration&lt;/h2&gt;
+
+    &lt;p class="paragraph"&gt;
+	You can &lt;a href="http://turadg.ucdev.org/jist/callListener.php?eval-silent=(load+&amp;quot;cs3-init.scm&amp;quot;)"&gt;use the interpreter&lt;/a&gt;, but the editor applet depends on the Course Portal for its filesystem.  Run as an application, it can use the local filesystem.
+	&lt;/p&gt;
+	&lt;p&gt;&lt;b&gt;NOTE&lt;/b&gt;: JIST requires JRE 1.2 or greater.
+	 &lt;/p&gt;
+
+    &lt;h2&gt;License&lt;/h2&gt;
+	&lt;p&gt;
+
+	We have released JIST under the &lt;a href="http://www.gnu.org/copyleft/gpl.html"&gt;GNU Public License&lt;/a&gt;.  If you wish to use or contribute to JIST, please contact &lt;a href="mailto:turadg@berkeley.edu"&gt;Turadg Aleahmad&lt;/a&gt;.
+	&lt;/p&gt;
+
+    &lt;h2&gt;Acknowledgements&lt;/h2&gt;
+	&lt;p class="paragraph"&gt;
+	The JIST Listener is built on &lt;a href="http://sisc.sourceforge.net/"&gt;SISC&lt;/a&gt;, a full R5RS Scheme interpreter for Java.  Thanks to Scott Miller and Matthias Radestock for their ample assistance.
+	&lt;/p&gt;
+
+	&lt;p&gt;
+	Much of JIST was written by undergraduate students, including: Darrel Liu, Jeff Wang, Will Chu, and Yosen Lin.
+	&lt;/p&gt;
+</description>
+  <shortDescription>Java Instructional Scheme Toolkit</shortDescription>
+  <issueTrackingUrl>http://issues.telstech.org/secure/BrowseProject.jspa?id=10011</issueTrackingUrl>
+  <siteAddress>telstech.org</siteAddress>
+  <siteDirectory>/var/www/telstech-html/jist</siteDirectory>
+  <distributionSite>telstech.org</distributionSite>
+  <distributionDirectory>/var/www/telstech-html/jist</distributionDirectory>
+  <repository />
+  <versions>
+    <version>
+      <id>0.9</id>
+      <name>0.9-src</name>
+      <tag>JIST_DIST_0_9</tag>
+    </version>
+  </versions>
+  <developers>
+    <developer>
+      <name>Turadg Aleahmad</name>
+      <id>1</id>
+      <email>turadg@berkeley.edu</email>
+      <url>http://tels.berkeley.edu/~turadg/</url>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Darrel Lui</name>
+      <id>5</id>
+    </developer>
+    <developer>
+      <name>Jeff Wang</name>
+      <id>6</id>
+    </developer>
+    <developer>
+      <name>Will Chu</name>
+      <id>7</id>
+    </developer>
+    <developer>
+      <name>Yosen Lin</name>
+      <id>8</id>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GPL</name>
+      <url>http://www.gnu.org/copyleft/gpl.html</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>xmlrpc</groupId>
+      <artifactId>xmlrpc</artifactId>
+      <version>1.2-b1</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <unitTestSourceDirectory>test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+    </unitTest>
+  </build>
+  <reports>
+    <report>maven-pmd-plugin</report>
+    <report>maven-license-plugin</report>
+    <report>maven-jxr-plugin</report>
+  </reports>
+</project>
+

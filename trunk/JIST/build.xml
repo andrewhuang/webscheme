@@ -1,0 +1,126 @@
+<project name="jist" default="install">
+   <description>
+   Builds the JIST jars
+   </description>
+
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="debugging" value="on"/>
+  <property name="optimization" value="off"/>
+  <property name="jar.sisc" value="lib/sisc.jar" />
+  <property name="jar.sisc-opt" value="lib/sisc-opt.jar" />
+  <property name="jar.sisc-lib" value="lib/sisc-lib.jar" />
+  <property name="jar.sisc-heap" value="lib/sisc-heap.jar" />
+  <property name="jar.xmlrpc" value="lib/xmlrpc-1.2-b1.jar" />
+  <property name="jist.jarname" value="jist.jar" />
+  <property name="jist.extensions" value=" sisc.jar sisc-opt.jar sisc-lib.jar sisc-heap.jar xmlrpc-1.2-b1.jar " />
+  <property name="jseditor.properties" value="src/jist/editor/Styles.properties" />
+
+  <path id="jist.class.path">
+	<pathelement path="${classpath}"/>
+	<pathelement location="${jar.xmlrpc}"/>
+	<pathelement location="${jar.sisc}"/>
+	<pathelement location="${jar.sisc-opt}"/>
+	<pathelement location="${jar.sisc-lib}"/>
+	<pathelement location="${jar.sisc-heap}"/>
+  </path>
+
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+   <target name="compile" depends="init"
+        description="compile the source " >
+	<!-- Compile the java code from ${src} into ${build} -->
+    <javac
+        srcdir="${src}"
+	destdir="${build}"
+	debug="${debugging}"
+	optimize="${optimization}">
+    	<classpath refid="jist.class.path" />
+    </javac>
+  </target>
+
+
+  <target name="dist" depends="compile"
+        description="generate the distribution" >
+
+    <!-- Put the non-classes into the build -->
+    <copy file="${jseditor.properties}" todir="${build}/jist/editor"/>
+	<copy file="src/jist/listener/Modeler.scm" todir="${build}/jist/listener/"/>
+
+    <!-- Put the Modeler.scm into the build -->
+    <copy file="${src}/jist/listener/Modeler.scm" todir="${build}/jist/listener/"/>
+
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}"/>
+    
+    <!-- Copy library JARs into distribution dir -->
+    <copy todir="${dist}">
+      <fileset dir="lib"/>
+    </copy>
+
+    <!-- Put everything in ${build}/jist into the jist JAR -->
+    <jar destfile="${dist}/${jist.jarname}"
+         basedir="${build}" >
+      <manifest>
+		<attribute name="Sealed" value="true"/>
+ 		<attribute name="Built-By" value="${user.name}"/>
+		<!-- Include other jars as download extensions -->
+		<attribute name="Class-Path" value="${jist.extensions}"/>
+		<attribute name="Specification-Title" value="Java Instructional Scheme Tools"/>
+		<attribute name="Specification-Version" value="${DSTAMP}.${TSTAMP}"/>
+		<attribute name="Specification-Vendor" value="University of California, Berkeley"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="sign-all" depends="dist"
+        description="Sign the all the JARs">
+	<signjar alias="wise" storepass="wisepass" lazy="true">
+	  <fileset dir="${dist}"/>
+	</signjar>
+  </target>
+
+  <!-- Put JARs on the developer's local web tree -->
+  <target name="install" depends="dist"
+        description="Copy necessary JARs into developer's web tree">
+    <copy file="${dist}/${jist.jarname}" tofile="${user.home}/ucwise-html/jist/${jist.jarname}"/>
+    <copy file="${jar.sisc}" todir="${user.home}/ucwise-html/jist"/>
+    <copy file="${jar.sisc-opt}" todir="${user.home}/ucwise-html/jist"/>
+    <copy file="${jar.sisc-lib}" todir="${user.home}/ucwise-html/jist"/>
+    <copy file="${jar.sisc-heap}" todir="${user.home}/ucwise-html/jist"/>
+    <copy file="${jar.xmlrpc}" todir="${user.home}/ucwise-html/jist"/>
+  </target>
+	
+  <!-- Clean all build files -->
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <!-- Put JARs on the developer's UC-DEV web tree -->
+  <target name="install-ucdev" depends="dist"
+        description="Copy necessary JARs into ucdev web tree">
+    <property name="ucdev.server" value="ucdev.org"/>
+    <property name="ucdev.dir" value="~/ucwise-html/jist"/>
+    <exec executable="scp">
+      <arg value="dist/*.jar"/>
+      <arg value="${ucdev.server}:${ucdev.dir}"/>
+    </exec>
+  </target>
+
+  <target name="install-ucdev-signed" depends="sign-all,install-ucdev"
+        description="Copy signed JARs into ucdev web tree">
+  </target>
+  
+
+</project>
