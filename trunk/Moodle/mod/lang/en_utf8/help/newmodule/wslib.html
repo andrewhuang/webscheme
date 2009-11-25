@@ -1,0 +1,1572 @@
+<html>
+<head>
+<title>wslib.scm</title>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<a name="MANUAL-TOP"></a>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td width="33%" align="left" valign="top"><font size=2></font></td>
+		<td width="34%" align="center" valign="top"><font size=2></font></td>
+		<td width="33%" align="right" valign="top"><font size=2><em>Generated:
+		March 20, 2003, 23:20:00</em></font></td>
+	</tr>
+</table>
+<font color="#0000ff">
+<h1>wslib.scm</h1>
+</font>
+<p></p>
+
+<p><font color="#808080">Source file:
+/home/turadg/wsauthor/wslib.scm<br>
+</font><font color="#808080">LAML Version 19.00 (January 16, 2003, slim)</font>
+<p>
+<table border=0>
+	<tr>
+		<td width=27 valign=top></td>
+		<td width=* valign=top>
+		<table border=0>
+			<tr>
+				<td width=805 valign=bottom bgcolor="#d2d2d2"><em>
+				WebScheme library functions</em></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<p>
+<p><a name="MANUAL-TOC"><em>Table of Contents:</em>
+<table border=0>
+	<tr>
+		<td width=12 valign=top></td>
+		<td width=* valign=top>
+		<table border=0>
+			<tr>
+				<td width=283 valign=top><a href="#SECTION1"><font size=2>1.
+				Fields </font></a></td>
+				<td width=283 valign=top><a href="#SECTION3"><font size=2>3.
+				Logging </font></a></td>
+				<td width=283 valign=top><a href="#SECTION5"><font size=2>5.
+				Tables </font></a></td>
+			</tr>
+			<tr>
+				<td width=283 valign=top><a href="#SECTION2"><font size=2>2.
+				Assertions </font></a></td>
+				<td width=283 valign=top><a href="#SECTION4"><font size=2>4.
+				State </font></a></td>
+				<td width=283 valign=top></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<p><a name="MANUAL-INDEX"><em>Alphabetic index:</em>
+<table border=0>
+	<tr>
+		<td width=12 valign=top></td>
+		<td width=* valign=top>
+		<table border=1>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#vector-map">vector-map</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(vector-map proc
+				vec)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Vector-map</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-ask-user">ws-ask-user</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-ask-user
+				message)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Present a Swing
+				query box to the user</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-balanced">ws-assert-balanced</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-balanced
+				id)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				field has as many open as close parens</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-imbalanced">ws-assert-imbalanced</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-imbalanced
+				id diff)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				field has "diff" more open than close parens</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-length">ws-assert-length</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-length id
+				length)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				length of the field is exactly "length"</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-maxlength">ws-assert-maxlength</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-maxlength
+				id length)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				length of the field is at maximum "length"</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-minlength">ws-assert-minlength</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-minlength
+				id length)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				length of the field is at minumum "length"</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-assert-number">ws-assert-number</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-assert-number
+				id)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Assert that the
+				field contains a number</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-eval-js">ws-eval-js</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-eval-js code)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Evaluate Javascript
+				code</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-get-string">ws-get-string</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-get-string id)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Get the value of a
+				field</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-log-get-queue">ws-log-get-queue</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-log-get-queue
+				logKey queueKey)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Get a vector of
+				logged values</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-log-page-get-queue">ws-log-page-get-queue</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-log-page-get-queue
+				queueKey)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Get a vector of
+				logged values</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-log-page-push">ws-log-page-push</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-log-page-push
+				queueKey value)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Push "value" onto
+				"queueKey" queue within the current page</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-log-push">ws-log-push</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-log-push logKey
+				queueKey value)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Push "value" onto
+				"queueKey" queue in "logKey"</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-disabled">ws-set-disabled</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-disabled id
+				disabled)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set the DISABLED
+				flag of a field</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-src">ws-set-src</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-src id src)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set the SRC of an
+				IMG field</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-status">ws-set-status</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-status id
+				statuscode)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set the status of a
+				status field</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-string">ws-set-string</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-string id
+				value)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set the value of a
+				field</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-timeout-delay!">ws-set-timeout-delay!</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-timeout-delay!
+				seconds)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set WebScheme
+				timeout delay</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-set-timeout-message!">ws-set-timeout-message!</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-set-timeout-message!
+				str)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Set WebScheme
+				timeout message</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-state-include-disabled">ws-state-include-disabled</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-state-include-disabled
+				fieldid)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Sets attr of field
+				to be stored in persistant state string literals defined in
+				webscheme.dom.SmartJSO</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-state-include-src">ws-state-include-src</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-state-include-src
+				fieldid)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Sets attr of field
+				to be stored in persistant state string literals defined in
+				webscheme.dom.SmartJSO</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-state-include-value">ws-state-include-value</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-state-include-value
+				fieldid)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Sets attr of field
+				to be stored in persistant state string literals defined in
+				webscheme.dom.SmartJSO</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-tell-user">ws-tell-user</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">(ws-tell-user
+				message)</td>
+				<td width=350 valign=top bgcolor="#ffffff">Present a Swing info
+				box to the user</td>
+			</tr>
+			<tr>
+				<td width=180 valign=top bgcolor="#ffffff"><a
+					href="#ws-timeout-message">ws-timeout-message</a></td>
+				<td width=320 valign=top bgcolor="#ffffff">ws-timeout-message</td>
+				<td width=350 valign=top bgcolor="#ffffff">Ws-set-timeout-message
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<p><a name="vector-map">
+<h2><font color="#0000ff">vector-map</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(vector-map proc vec)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Vector-map</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>proc</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>procedure to apply to vector elements</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-eval-js">
+<h2><font color="#0000ff">ws-eval-js</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-eval-js code)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Evaluate Javascript code</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>code</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>Javascript code to evaluate</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-tell-user">
+<h2><font color="#0000ff">ws-tell-user</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-tell-user message)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Present a Swing info box to the user</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>message</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>message to present</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-ask-user">
+<h2><font color="#0000ff">ws-ask-user</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-ask-user message)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Present a Swing query box to the user</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>message</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>message to present</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>user's input into the box</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-set-timeout-delay!">
+<h2><font color="#0000ff">ws-set-timeout-delay!</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-timeout-delay!
+				seconds)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set WebScheme timeout delay</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>seconds</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>seconds until timeout</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-timeout-message">
+<h2><font color="#0000ff">ws-timeout-message</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>ws-timeout-message</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Ws-set-timeout-message</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-set-timeout-message!">
+<h2><font color="#0000ff">ws-set-timeout-message!</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-timeout-message! str)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set WebScheme timeout message</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>message</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>to deliver on timeout</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+&nbsp;
+<p><a name="SECTION1"><b><font color="#0000ff"><font
+	size=6>1.&nbsp;&nbsp;&nbsp;</font><font size=6>F</font><font size=5>IELDS
+
+</font></font></b><br>
+<hr>
+<a name="ws-set-string">
+<h2><font color="#0000ff">ws-set-string</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-string id value)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set the value of a field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>id</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>id of field to address</td>
+			</tr>
+			<tr>
+				<td width=140 valign=top>value</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>new value for field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-get-string">
+<h2><font color="#0000ff">ws-get-string</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-get-string id)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Get the value of a field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>id</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>id of field to address</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>value of the field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-set-src">
+<h2><font color="#0000ff">ws-set-src</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-src id src)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set the SRC of an IMG field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>id</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>id of field to address</td>
+			</tr>
+			<tr>
+				<td width=140 valign=top>src</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>new src for img</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-set-disabled">
+<h2><font color="#0000ff">ws-set-disabled</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-disabled id disabled)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set the DISABLED flag of a field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>id</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>id of field to address</td>
+			</tr>
+			<tr>
+				<td width=140 valign=top>disabled</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>new boolean for disabled flag</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-set-status">
+<h2><font color="#0000ff">ws-set-status</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-set-status id statuscode)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Set the status of a status field</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Parameters</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=140 valign=top>id</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>id of field to address</td>
+			</tr>
+			<tr>
+				<td width=140 valign=top>statuscode</td>
+				<td width=5 valign=top></td>
+				<td width=* valign=top>code of new status</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+&nbsp;
+<p><a name="SECTION2"><b><font color="#0000ff"><font
+	size=6>2.&nbsp;&nbsp;&nbsp;</font><font size=6>A</font><font size=5>SSERTIONS
+
+
+</font></font></b><br>
+<hr>
+<a name="ws-assert-length">
+<h2><font color="#0000ff">ws-assert-length</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-length id length)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the length of the field is
+				exactly "length"</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains a
+				string of length 'length'</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-assert-minlength">
+<h2><font color="#0000ff">ws-assert-minlength</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-minlength id
+				length)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the length of the field is
+				at minumum "length"</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains a
+				string no shorter than 'length'</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-assert-maxlength">
+<h2><font color="#0000ff">ws-assert-maxlength</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-maxlength id
+				length)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the length of the field is
+				at maximum "length"</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains a
+				string no longer than 'length'</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-assert-number">
+<h2><font color="#0000ff">ws-assert-number</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-number id)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the field contains a number</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains a
+				number</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-assert-imbalanced">
+<h2><font color="#0000ff">ws-assert-imbalanced</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-imbalanced id
+				diff)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the field has "diff" more
+				open than close parens</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains
+				"diff" more open than close parens</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-assert-balanced">
+<h2><font color="#0000ff">ws-assert-balanced</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-assert-balanced id)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Assert that the field has as many open
+				as close parens</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>#t if the specified field contains as
+				many open as close parens</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+&nbsp;
+<p><a name="SECTION3"><b><font color="#0000ff"><font
+	size=6>3.&nbsp;&nbsp;&nbsp;</font><font size=6>L</font><font size=5>OGGING
+
+
+</font></font></b><br>
+<hr>
+<a name="ws-log-push">
+<h2><font color="#0000ff">ws-log-push</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-log-push logKey queueKey
+				value)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Push "value" onto "queueKey" queue in
+				"logKey"</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-log-page-push">
+<h2><font color="#0000ff">ws-log-page-push</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-log-page-push queueKey
+				value)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Push "value" onto "queueKey" queue
+				within the current page</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-log-get-queue">
+<h2><font color="#0000ff">ws-log-get-queue</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-log-get-queue logKey
+				queueKey)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Get a vector of logged values</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>a vector of values for log,queueKey</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-log-page-get-queue">
+<h2><font color="#0000ff">ws-log-page-get-queue</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-log-page-get-queue
+				queueKey)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Get a vector of logged values</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Returns</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>a vector of values for queueKey on the
+				current page</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+&nbsp;
+<p><a name="SECTION4"><b><font color="#0000ff"><font
+	size=6>4.&nbsp;&nbsp;&nbsp;</font><font size=6>S</font><font size=5>TATE
+
+
+</font></font></b><br>
+<hr>
+<a name="ws-state-include-src">
+<h2><font color="#0000ff">ws-state-include-src</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-state-include-src
+				fieldid)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Sets attr of field to be stored in
+				persistant state string literals defined in webscheme.dom.SmartJSO</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-state-include-disabled">
+<h2><font color="#0000ff">ws-state-include-disabled</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-state-include-disabled
+				fieldid)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Sets attr of field to be stored in
+				persistant state string literals defined in webscheme.dom.SmartJSO</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+<a name="ws-state-include-value">
+<h2><font color="#0000ff">ws-state-include-value</font></h2>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Form</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top><kbd>(ws-state-include-value
+				fieldid)</kbd></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<table border=0>
+	<tr>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=140 valign=top bgcolor="#ffffff"><font color="#ff0000"><b>Description</b></font></td>
+		<td width=12 valign=top bgcolor="#ffffff"></td>
+		<td width=* valign=top bgcolor="#ffffff">
+		<table border=0>
+			<tr>
+				<td width=* valign=top>Sets attr of field to be stored in
+				persistant state string literals defined in webscheme.dom.SmartJSO</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<br>
+<hr>
+&nbsp;
+<p><a name="SECTION5"><b><font color="#0000ff"><font
+	size=6>5.&nbsp;&nbsp;&nbsp;</font><font size=6>T</font><font size=5>ABLES
+
+
+</font></font></b><br>
+<hr>
+<font size=2 color="#ff0000">Generated: March 20, 2003, 23:20:00</font><br>
+<font size=2 color="#ff0000">This documentation has been
+extracted automatically from the Scheme source file by means of the
+Schemedoc tool</font>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>&nbsp;
+<p>
+</body>
+</html>
+<!-- Generated from an LAML (Lisp Abstracted Markup Language) source file. Version 19.00 (January 16, 2003, slim). LAML is designed and implemented by Kurt N?rmark, normark@cs.auc.dk. Time of generation: March 20, 2003 23:20:01-->
+
