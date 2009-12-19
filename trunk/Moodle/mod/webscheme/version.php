@@ -9,7 +9,7 @@
  * @package newmodule
  **/
 
-$module->version  = 2007040200;  // The current module version (Date: YYYYMMDDXX)
+$module->version  = 2009120400;  // The current module version (Date: YYYYMMDDXX)
 $module->cron     = 0;           // Period for cron to check this module (secs)
 
 ?>
