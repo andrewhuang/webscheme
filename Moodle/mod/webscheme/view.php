@@ -1,68 +1,63 @@
- <?php  // $Id: view.php,v 1.6 2007/09/03 12:23:36 jamiesensei Exp $
+ <?php  // $Id: view.php,v 1.6.2.3 2009/04/17 22:06:25 skodak Exp $
 /**
  * This page prints a particular instance of webscheme
  *
- * @author
- * @version $Id: view.php,v 1.6 2007/09/03 12:23:36 jamiesensei Exp $
- * @package webscheme
+ * @author 
+ * @package mod/webscheme
  **/
 
-/// (Replace newmodule with the name of your module)
 
-    require_once("../../config.php");
-    require_once("lib.php");
 
-    $id = optional_param('id', 22, PARAM_INT); // Course Module ID, or
-    $a  = optional_param('a', 22, PARAM_INT);  // webscheme ID
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(__FILE__).'/lib.php');
 
-    if ($id) {
-        if (! $cm = get_record("course_modules", "id", $id)) {
-            error("Course Module ID was incorrect");
-        }
+    $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
+    $a  = optional_param('a', 0, PARAM_INT);  // webscheme instance ID
 
-        if (! $course = get_record("course", "id", $cm->course)) {
-            error("Course is misconfigured");
-        }
-
-        if (! $webscheme = get_record("webscheme", "id", $cm->instance)) {
-            error("Course module is incorrect");
-        }
-
-    } else {
-        if (! $webscheme = get_record("webscheme", "id", $a)) {
-            error("Course module is incorrect");
-        }
-        if (! $course = get_record("course", "id", $webscheme->course)) {
-            error("Course is misconfigured");
-        }
-        if (! $cm = get_coursemodule_from_instance("webscheme", $webscheme->id, $course->id)) {
-            error("Course Module ID was incorrect");
-        }
+if ($id) {
+    if (! $cm = get_coursemodule_from_id('webscheme', $id)) {
+        error('Course Module ID was incorrect');
     }
-    
-    require_login($course->id);
-    add_to_log($course->id, "webscheme", "view", "view.php?id=$cm->id", "$webscheme->id");
+
+    if (! $course = get_record('course', 'id', $cm->course)) {
+        error('Course is misconfigured');
+    }
+
+} else if ($a) {
+    if (! $webscheme = get_record('webscheme', 'id', $a)) {
+        error('Course module is incorrect');
+    }
+    if (! $course = get_record('course', 'id', $webscheme->course)) {
+        error('Course is misconfigured');
+    }
+    if (! $cm = get_coursemodule_from_instance('webscheme', $webscheme->id, $course->id)) {
+        error('Course Module ID was incorrect');
+    }
+
+} else {
+    error('You must specify a course_module ID or an instance ID');
+}
+
+require_login($course, true, $cm);
+
+add_to_log($course->id, "webscheme", "view", "view.php?id=$cm->id", "$webscheme->id");
 
 /// Print the page header
-    $strwebschemes = get_string("modulenameplural", "webscheme");
-    $strwebscheme  = get_string("modulename", "webscheme");
+$strwebschemes = get_string('modulenameplural', 'webscheme');
+$strwebscheme  = get_string('modulename', 'webscheme');
 
-    // It seems like build_navigation currently does not work, so I built my own $navigation variable below
-    // to use in print_header_simple
-    
-    //$navlinks = array();
-    //$navlinks[] = array('name' => $strwebschemes, 'link' => "index.php?id=$course->id", 'type' => 'activity');
-    //$navlinks[] = array('name' => format_string($webscheme->name), 'link' => '', 'type' => 'activityinstance');
-    //$navigation = build_navigation($navlinks);
-    //print($navigation);
-	//$navigation = $navlinks;
-  
-    $navigation = "<a href=\"index.php?id=$course->id\">$strwebschemes</a> -> ".format_string($webscheme->name);
-    
-    print_header_simple(format_string($webscheme->name), "", $navigation, "", "", true,
-                  update_module_button($cm->id, $course->id, $strwebscheme), navmenu($course, $cm));
+$navlinks = array();
+$navlinks[] = array('name' => $strwebschemes, 'link' => "index.php?id=$course->id", 'type' => 'activity');
+$navlinks[] = array('name' => format_string($webscheme->name), 'link' => '', 'type' => 'activityinstance');
 
-/// Print the main part of the page
+$navigation = build_navigation($navlinks);
+
+print_header_simple(format_string($webscheme->name), '', $navigation, '', '', true,
+              update_module_button($cm->id, $course->id, $strwebscheme), navmenu($course, $cm));
+
+
+              
+/// Print the webschemey part of the page, yo
 
     echo "<br/>";
     $wsmlInput = $webscheme->wsml;
@@ -121,6 +116,10 @@
     // -----------------------------------------------------------------------------
     
 	// User defined section using WSML/HTML (from the <ws-html> data in WSML)
+	// changed to take into account html-entities pass
+	$html = $wsml->{'ws-html'}->asXML();
+	echo html_entity_decode($html);
+	//TODO -- fix this
     echo $wsml->{'ws-html'}->asXML();
     echo "\n";
     // Predefined value -----------------------------------------------------------
@@ -128,7 +127,8 @@
    	// ----------------------------------------------------------------------------
    	
    	echo "<!-- End of WSML -->\n";
+
 /// Finish the page
-    print_footer($course);
+print_footer($course);
     
 ?>
