@@ -11,6 +11,9 @@
  */
 
 
+// TODO -- delay runSchemeEvent until page is fully loaded.
+
+
 function getSchemeHandler() {
   // get by slot instead of getElementById() for Safari
   // in Safari, the latter returns you the DOM node "APPLET" rather than
@@ -131,6 +134,7 @@ function insertRowValues (tableID, index, vals) {
   var rowElement = tableElement.insertRow(index);
   fillRowElement(rowElement, vals);
 }
+
 
 /*
   DataModel

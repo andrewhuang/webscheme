@@ -1,0 +1,29 @@
+body { 
+       background-color : #CCCC99;
+       }
+
+pre input {
+            font-family : monospace;
+            background-color : #FFFFEE;
+            border-width : thin;
+            border-style : inset;
+            }
+
+code input {
+             background-color : #FFFFEE;
+             font-family : monospace;
+             border-width : thin;
+             border-style : inset;
+             }
+
+.inputField {
+              background-color : #FFFFEE;
+              border-width : thin;
+              border-style : inset;
+              }
+
+.outputField { 
+               background-color : #EEEEFF;
+               border-width : thin;
+               border-style : dotted;
+               }
