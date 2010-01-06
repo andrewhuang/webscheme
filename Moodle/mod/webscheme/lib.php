@@ -7,9 +7,8 @@
  * All the webscheme specific functions are in locallib.php
  */
 
-/// (replace webscheme with the name of your module and delete this line)
 
-$webscheme_CONSTANT = 31415;     /// for example
+$webscheme_CONSTANT = 91415926535;     
 
 
 /**

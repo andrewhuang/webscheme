@@ -1,15 +1,15 @@
 <?php
 
-$string['webscheme'] = 'webscheme';
+$string['webscheme'] = 'WebScheme';
 
-$string['modulename'] = 'webscheme';
-$string['modulenameplural'] = 'webschemes';
+$string['modulename'] = 'WebScheme';
+$string['modulenameplural'] = 'WebSchemes';
 
 $string['webschemewsml'] = 'wsml entry';
 $string['wsmlParams'] = 'WSML';
 $string['wsmlHtml'] = 'HTML';
 
-$string['webschemeintro'] = 'webscheme Intro';
-$string['webschemename'] = 'webscheme Name';
+$string['webschemeintro'] = 'WebScheme Intro';
+$string['webschemename'] = 'WebScheme Name';
 
 ?>
