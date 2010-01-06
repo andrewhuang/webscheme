@@ -16,7 +16,7 @@
     			SEQUENCE="false" ENUM="false"
     			COMMENT="name field for moodle instances" PREVIOUS="course"
     			NEXT="intro" />
-    		<FIELD NAME="intro" TYPE="text" LENGTH="medium"
+    		<FIELD NAME="intro" TYPE="text" LENGTH="small"
     			NOTNULL="false" SEQUENCE="false" ENUM="false"
     			COMMENT="General introduction of the newmodule activity"
     			PREVIOUS="name" NEXT="introformat" />
