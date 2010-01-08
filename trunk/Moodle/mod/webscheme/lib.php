@@ -20,13 +20,23 @@ $webscheme_CONSTANT = 91415926535;
  * @param object $webscheme An object from the form in mod_form.php
  * @return int The id of the newly inserted webscheme record
  */
-function webscheme_add_instance($webscheme) {
+function webscheme_add_instance($formobj) {
+	
+	global $DB; 
+	//echo"<pre>";print_r($webscheme);echo"</pre>";break;
+	
+	$wsobj->course = $formobj->course;
+	
+	$wsobj->name = $formobj->name;
+	$wsobj->intro = $formobj->intro;
+	$wsobj->introformat = $formobj->introformat;
+	
+    $wsobj->timecreated = time();
+    $wsobj->timecreated = time();
 
-    $webscheme->timecreated = time();
+    
 
-    // anything more to do here?
-
-    return insert_record('webscheme', $webscheme);
+    return $DB->insert_record('webscheme', $wsobj);
 }
 
 
