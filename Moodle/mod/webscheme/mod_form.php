@@ -28,49 +28,64 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
 class mod_webscheme_mod_form extends moodleform_mod {
 
-    function definition() {
+	function definition() {
 
-        global $COURSE;
-        $mform =& $this->_form;
+		global $COURSE;
+		$mform =& $this->_form;
 
-//-------------------------------------------------------------------------------
-    /// Adding the "general" fieldset, where all the common settings are showed
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+		//-------------------------------------------------------------------------------
+		/// Adding the "general" fieldset, where all the common settings are showed
+		$mform->addElement('header', 'general', get_string('general', 'form'));
 
-    /// Adding the standard "name" field
-        $mform->addElement('text', 'name', get_string('webschemename', 'webscheme'), array('size'=>'64'));
-        $mform->setType('name', PARAM_TEXT);
-        $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+		/// Adding the standard "name" field
+		$mform->addElement('text', 'name', get_string('webschemename', 'webscheme'), array('size'=>'64'));
+		$mform->setType('name', PARAM_TEXT);
+		$mform->addRule('name', null, 'required', null, 'client');
+		$mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-    /// Adding the required "intro" field to hold the description of the instance
-        $mform->addElement('htmleditor', 'intro', get_string('webschemeintro', 'webscheme'));
-        $mform->setType('intro', PARAM_RAW);
-        $mform->addRule('intro', get_string('required'), 'required', null, 'client');
-        $mform->setHelpButton('intro', array('writing', 'richtext'), false, 'editorhelpbutton');
+		/// Adding the required "intro" field to hold the description of the instance
+		$mform->addElement('htmleditor', 'intro', get_string('webschemeintro', 'webscheme'));
+		$mform->setType('intro', PARAM_RAW);
+		$mform->addRule('intro', get_string('required'), 'required', null, 'client');
+		$mform->setHelpButton('intro', array('writing', 'richtext'), false, 'editorhelpbutton');
 
-    /// Adding "introformat" field
-        $mform->addElement('format', 'introformat', get_string('format'));
+		/// Adding "introformat" field
+		$mform->addElement('format', 'introformat', get_string('format'));
 
-//-------------------------------------------------------------------------------
+		//-------------------------------------------------------------------------------
 
-//TODO add wsml field, populate it with current entry in db.
-        
-/// Adding the rest of newmodule settings, spreeading all them into this fieldset
-    /// or adding more fieldsets ('header' elements) if needed for better logic
-        $mform->addElement('static', 'label1', 'webschemesetting1', 'Your webscheme fields go here. Replace me!');
+		//TODO add wsml field, populate it with current entry in db.
 
-        $mform->addElement('header', 'webschemefieldset', get_string('webschemefieldset', 'webscheme'));
-        $mform->addElement('static', 'label2', 'webschemesetting2', 'Your webscheme fields go here. Replace me!');
+		$mform->addElement('header', 'pagedefsheader', get_string('pagedefs', 'webscheme'));
 
-//-------------------------------------------------------------------------------
-        // add standard elements, common to all modules
-        $this->standard_coursemodule_elements();
-//-------------------------------------------------------------------------------
-        // add standard buttons, common to all modules
-        $this->add_action_buttons();
+		$mform->addElement('text', 'loadurls', get_string('loadurls', 'webscheme'), 'size="80"');
+		$mform->setDefault('loadurls', get_string('loadurlsdefault','webscheme'));
 
-    }
+	    $initexprattr = array('rows="10"', 'cols="80"');
+		$mform->addElement('textarea', 'initexprs', get_string('initexprs', 'webscheme'),
+        				   $initexprattr);
+
+		/// Main content area.
+		// TODO -- run an htmlentities on it?
+
+		$mform->addElement('header', 'pagecontentheader', get_string('pagecontent', 'webscheme'));
+		$htmleditorsettings = array('canUseHtmlEditor'=>'detect', 'rows' => 30, 
+								'cols'  => 65, 'width' => 0,'height'=> 0);
+		$mform->addElement('htmleditor', 'contentmain', get_string('contentmain', 'webscheme'), $htmleditorsettings);
+		$mform->setType('contentmain', PARAM_RAW);
+		$mform->addRule('contentmain', null, 'required', null, 'client');
+		$mform->setHelpButton('contentmain', array('webschemecontent',
+		get_string('contenthelp', 'webscheme'),
+        										   'webscheme'));
+
+		//-------------------------------------------------------------------------------
+		// add standard elements, common to all modules
+		$this->standard_coursemodule_elements();
+		//-------------------------------------------------------------------------------
+		// add standard buttons, common to all modules
+		$this->add_action_buttons();
+
+	}
 }
 
 ?>
