@@ -4,11 +4,11 @@
  * This page prints a particular instance of webscheme
  *
  * @author William, Nate
- * @version 
+ * @version
  * @package mod/webscheme
  */
 
-/// (Replace webscheme with the name of your module and remove this line)
+// TODO -- get the webscheme css file in here.  Moodle?
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
@@ -17,93 +17,112 @@ $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $a  = optional_param('a', 0, PARAM_INT);  // webscheme instance ID
 
 if ($id) {
-    if (! $cm = get_coursemodule_from_id('webscheme', $id)) {
-        error('Course Module ID was incorrect');
-    }
+	if (! $cm = get_coursemodule_from_id('webscheme', $id)) {
+		error('Course Module ID was incorrect');
+	}
 
-    if (! $course = get_record('course', 'id', $cm->course)) {
-        error('Course is misconfigured');
-    }
+	if (! $course = get_record('course', 'id', $cm->course)) {
+		error('Course is misconfigured');
+	}
 
-    if (! $webscheme = get_record('webscheme', 'id', $cm->instance)) {
-        error('Course module is incorrect');
-    }
+	if (! $webscheme = get_record('webscheme', 'id', $cm->instance)) {
+		error('Course module is incorrect');
+	}
 
 } else if ($a) {
-    if (! $webscheme = get_record('webscheme', 'id', $a)) {
-        error('Course module is incorrect');
-    }
-    if (! $course = get_record('course', 'id', $webscheme->course)) {
-        error('Course is misconfigured');
-    }
-    if (! $cm = get_coursemodule_from_instance('webscheme', $webscheme->id, $course->id)) {
-        error('Course Module ID was incorrect');
-    }
+	if (! $webscheme = get_record('webscheme', 'id', $a)) {
+		error('Course module is incorrect');
+	}
+	if (! $course = get_record('course', 'id', $webscheme->course)) {
+		error('Course is misconfigured');
+	}
+	if (! $cm = get_coursemodule_from_instance('webscheme', $webscheme->id, $course->id)) {
+		error('Course Module ID was incorrect');
+	}
 
 } else {
-    error('You must specify a course_module ID or an instance ID');
+	error('You must specify a course_module ID or an instance ID');
 }
+
+
 
 require_login($course, true, $cm);
 
 add_to_log($course->id, "webscheme", "view", "view.php?id=$cm->id", "$webscheme->id");
 
-/// Print the page header
-$strwebschemes = get_string('modulenameplural', 'webscheme');
-$strwebscheme  = get_string('modulename', 'webscheme');
 
+
+////// Header stuff
 $navlinks = array();
-$navlinks[] = array('name' => $strwebschemes, 'link' => "index.php?id=$course->id", 'type' => 'activity');
-$navlinks[] = array('name' => format_string($webscheme->name), 'link' => '', 'type' => 'activityinstance');
-
+$navlinks[] = array('name' => get_string('modulenameplural', 'webscheme'),
+ 				    'link' => "index.php?id=$course->id", 
+ 				    'type' => 'activity');
+$navlinks[] = array('name' => format_string($webscheme->name),
+				    'link' => '', 
+				    'type' => 'activityinstance');
 $navigation = build_navigation($navlinks);
 
-print_header_simple(format_string($webscheme->name), '', $navigation, '', '', true,
-              update_module_button($cm->id, $course->id, $strwebscheme), navmenu($course, $cm));
+// for webscheme
+require_js(dirname(__FILE__).'defs/ws-lib.js');
+$css_tag = '<link href="defs/ws-defaults.css" rel="stylesheet" type="text/css" />';
 
-/// Print the main part of the page
+
+print_header_simple(
+format_string($webscheme->name),
+    '', 
+$navigation,
+    '', 
+$css_tag,
+true,
+update_module_button($cm->id, $course->id, get_string('modulename', 'webscheme')),
+navmenu($course, $cm)
+);
 
 
-              
-/// Print the webschemey part of the page, yo
 
-echo "<br/>";
-$wsmlInput = $webscheme->wsml;
-    
-//Predefined values for the scheme handler -----------------------------------
-echo "\n<!-- Start of WSML  -->\n";
-echo "<script src=\"defs/ws-lib.js\" type=\"text/javascript\"></script>\n";
-echo "<div>\n<!-- Sorry, this is not an XHTML element but Safari ne comprends pas l'object -->\n";
-echo "<applet width=\"120\" height=\"36\"";
-echo "standby=\"Loading WebScheme daemon\" id=\"SchemeHandler\"";
-echo "name=\"SchemeHandler\" archive=\"lib/webscheme.jar\"";
-echo "classid=\"java:webscheme.SchemeHandler.class\" mayscript=\"true\"";
-echo "scriptable=\"true\" code=\"webscheme.SchemeHandler.class\">\n";
-echo "<param value=\"true\" name=\"mayscript\" />\n";
-echo "<param value=\"true\" name=\"scriptable\" />\n";
-echo "<param value=\"SchemeHandler\" name=\"name\" />\n";
-echo "<param value=\"true\" name=\"progressbar\" />\n";
-echo "<param value=\"#FFCC33\" name=\"progresscolor\" />\n";
-echo "<param value=\"#AAAACC\" name=\"boxfgcolor\" />\n";
-echo "<param value=\"#FFCC33\" name=\"boxbgcolor\" />\n";
-echo "<param value=\"Loading WebScheme...\" name=\"boxmessage\" />\n";
 
-// ---------------------------------------------------------------------------
-// User defined params for scheme handler from WSML 
-$wsml = new SimpleXMLElement($wsmlInput);
+////// page part defintions
 
-//Load Urls
+$scheme_handler_start = <<<EEOOTT
+	<div>
+	<!-- Sorry, this is not an XHTML element but Safari ne comprends pas l'object -->
+	<applet width="120" height="36"
+	  standby="Loading WebScheme daemon" id="SchemeHandler"
+	  name="SchemeHandler" archive="lib/webscheme.jar"
+	  classid="java:webscheme.SchemeHandler.class" mayscript="true"
+      scriptable="true" code="webscheme.SchemeHandler.class"
+      >
+	<param value="true" name="mayscript" />
+	<param value="true" name="scriptable" />
+	<param value="SchemeHandler" name="name" />
+	<param value="true" name="progressbar" />
+	<param value="#FFCC33" name="progresscolor" />
+	<param value="#AAAACC" name="boxfgcolor" />
+	<param value="#FFCC33" name="boxbgcolor" />
+	<param value="Loading WebScheme..." name="boxmessage" />
+EEOOTT;
+
+// loadurls
+$loadurl_parameters = "";
 $loadUrlCount = 0;
-foreach ($wsml->{'ws-loadurl'} as $lu){
-	$lu = trim($lu);
-    echo "<param value=\"$lu\" name=\"loadurl-$loadUrlCount\" />\n";
-    $loadUrlCount++;
+$loadurls = json_decode($defaults['ws_loadurls'], true);
+if (json_last_error() != JSON_ERROR_NONE) {
+	print_error(get_string('badjsondecode','webscheme')	);
 }
-    
+foreach ($loadurls as $loadurl) {
+	$loadurl = trim($loadurl);   // needed?
+	$loadurl_parameters .= "<param value=\"{$loadurl}\" name=\"loadurl-{$loadUrlCount} /> ";
+	$loadUrlCount++;
+}
+
+
+....
+
+
 //Initial Expressions
 $initExpr = trim(htmlentities($wsml->{'ws-initExpr'}));
 echo "<param value=\"$initExpr\" name=\"init-expr\" />\n";
-     
+ 
 //Events
 $eCount = 0;
 foreach ($wsml->{'ws-event'} as $event){
@@ -114,15 +133,14 @@ foreach ($wsml->{'ws-event'} as $event){
 	echo "<param value=\"$assertions\" name=\"event-assertions-$eCount\" />\n";
 	echo "<param value=\"$template\" name=\"event-template-$eCount\" />\n";
 	$eCount++;
-	}
+}
 
 // -----------------------------------------------------------------------------
 // Predefined values -----------------------------------------------------------
-echo "</applet>\n";
-echo "</div>\n";
-echo "<form onsubmit=\"return false;\" id=\"wsfields\">\n";
+
+
 // -----------------------------------------------------------------------------
-    
+
 // User defined section using WSML/HTML (from the <ws-html> data in WSML)
 // changed to take into account html-entities pass
 $html = $wsml->{'ws-html'}->asXML();
@@ -133,11 +151,21 @@ echo "\n";
 // Predefined value -----------------------------------------------------------
 echo "</form>\n";
 // ----------------------------------------------------------------------------
-  
-echo "<!-- End of WSML -->\n";
 
+
+/// Print the main part of the page
+echo "<br/>";
+
+echo $scheme_handler_start . "\n";
+
+
+echo "</applet><div>\n";
+echo "<form onsubmit=\"return false;\" id=\"wsfields\">\n";
+echo "<!-- End of WSML -->\n";
 
 /// Finish the page
 print_footer($course);
+
+
 
 ?>

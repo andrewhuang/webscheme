@@ -2,13 +2,11 @@
 
 /**
  * Library of functions and constants for module webscheme
- * This file contains all the core Moodle functions, 
+ * This file contains all the core Moodle functions,
  *     neeeded to allow the module to work integrated in Moodle.
  * All the webscheme specific functions are in locallib.php
  */
 
-
-$webscheme_CONSTANT = 91415926535;     
 
 
 /**
@@ -20,25 +18,57 @@ $webscheme_CONSTANT = 91415926535;
  * @param object $webscheme An object from the form in mod_form.php
  * @return int The id of the newly inserted webscheme record
  */
-function webscheme_add_instance($formobj) {
-	
-	global $DB; 
+function webscheme_add_instance($webscheme) {
+
 	//echo"<pre>";print_r($webscheme);echo"</pre>";break;
-	
-	$wsobj->course = $formobj->course;
-	
-	$wsobj->name = $formobj->name;
-	$wsobj->intro = $formobj->intro;
-	$wsobj->introformat = $formobj->introformat;
-	
-    $wsobj->timecreated = time();
-    $wsobj->timecreated = time();
+	$webscheme->timecreated = time();
+	$webscheme->timemodified = time();
+    // ws_html is good to go
+    // ws_initexpr is  good
+	webscheme_fixloadurls($webscheme);
+	webscheme_fixevents($webscheme);
+	// insert it.
+	return insert_record('webscheme', $webscheme);
 
-    
-
-    return $DB->insert_record('webscheme', $wsobj);
 }
 
+// tweaks the webscheme object
+function webscheme_fixloadurls(&$webscheme) {
+	$loadurls = preg_split("/\s+/", $webscheme->ws_loadurls, 0, PREG_SPLIT_NO_EMPTY);
+	$webscheme->ws_loadurls = json_encode($loadurls);
+}
+
+function webscheme_fixevents(&$webscheme) {
+	// events need to be colated from eventname, evenasserts, and event templates.
+	//  need to check for empties as well!
+	$enames = $webscheme->eventname;
+	$easserts = $webscheme->eventasserts;
+	$etemplates = $webscheme->eventtemplate;
+	$ws_events = array();
+	for($i=0; $i < count($enames); $i++) {
+		if (!empty($enames[$i])) {
+			$ws_events[] = array("name"=> $enames[$i], 
+			                     "assertion"=> $easserts[$i],
+								 "template"=> $etemplates[$i] );
+		}
+	}
+
+	// why the db_preprocess?  oh, good question.  json_encode turns 
+	//  the line returns into \r\n nicely, but when added to the 
+	//  database, they get converted back to line returns.  Then,
+	//  the json decode freaks.  This solution probably isn't best, sigh.
+	$webscheme->ws_events = webscheme_processfordb(json_encode($ws_events));		
+}
+
+// might need options to do this well.  Right now, it escapes
+// /r/n only.  addslashes does " as well...
+function webscheme_processfordb($str) {
+	// replace \r with \\r.  Need to quote the backslash in the replacement, sigh
+	$str = str_replace("\\r", "\\\\r", $str);
+	// replace \n with \\n
+	$str = str_replace("\\n", "\\\\n", $str);
+	return $str;
+}
 
 /**
  * Given an object containing all the necessary data,
@@ -49,13 +79,14 @@ function webscheme_add_instance($formobj) {
  * @return boolean Success/Fail
  */
 function webscheme_update_instance($webscheme) {
-
-    $webscheme->timemodified = time();
-    $webscheme->id = $webscheme->instance;
-
-    // extra stuff todo?  
-
-    return update_record('webscheme', $webscheme);
+	$webscheme->timemodified = time();
+	$webscheme->id = $webscheme->instance;
+    // ws_html is good to go
+    // ws_initexpr is  good
+	webscheme_fixloadurls($webscheme);
+	webscheme_fixevents($webscheme);
+	
+	return update_record('webscheme', $webscheme);
 }
 
 
@@ -69,19 +100,19 @@ function webscheme_update_instance($webscheme) {
  */
 function webscheme_delete_instance($id) {
 
-    if (! $webscheme = get_record('webscheme', 'id', $id)) {
-        return false;
-    }
+	if (! $webscheme = get_record('webscheme', 'id', $id)) {
+		return false;
+	}
 
-    $result = true;
+	$result = true;
 
-    // nothing extra to delete
+	// nothing extra to delete
 
-    if (! delete_records('webscheme', 'id', $webscheme->id)) {
-        $result = false;
-    }
+	if (! delete_records('webscheme', 'id', $webscheme->id)) {
+		$result = false;
+	}
 
-    return $result;
+	return $result;
 }
 
 
@@ -96,8 +127,8 @@ function webscheme_delete_instance($id) {
  * @todo Finish documenting this function
  */
 function webscheme_user_outline($course, $user, $mod, $webscheme) {
-	// ha, no idea what to do here...  website is extra helpful also...
-    return $return;
+	echo "You want it?  You write it! -- in /mod/webscheme/lib.php";
+	return $return;
 }
 
 
@@ -109,8 +140,8 @@ function webscheme_user_outline($course, $user, $mod, $webscheme) {
  * @todo Finish documenting this function
  */
 function webscheme_user_complete($course, $user, $mod, $webscheme) {
-	// clueless!
-    return true;
+	echo "You really want it?  You write it! -- in /mod/webscheme/lib.php";
+	return true;
 }
 
 
@@ -123,7 +154,7 @@ function webscheme_user_complete($course, $user, $mod, $webscheme) {
  * @todo Finish documenting this function
  */
 function webscheme_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false
+	return false;  //  True if anything was printed, otherwise false
 }
 
 
@@ -136,7 +167,7 @@ function webscheme_print_recent_activity($course, $isteacher, $timestart) {
  * @todo Finish documenting this function
  **/
 function webscheme_cron () {
-    return true;
+	return true;
 }
 
 
@@ -151,7 +182,7 @@ function webscheme_cron () {
  */
 function webscheme_get_participants($webschemeid) {
 	// hmm, we don't return anything here, right?
-    return false;
+	return false;
 }
 
 
@@ -166,15 +197,15 @@ function webscheme_get_participants($webschemeid) {
  * @todo Finish documenting this function
  */
 function webscheme_scale_used($webschemeid, $scaleid) {
-    $return = false;
+	$return = false;
 
-    //$rec = get_record("webscheme","id","$webschemeid","scale","-$scaleid");
-    //
-    //if (!empty($rec) && !empty($scaleid)) {
-    //    $return = true;
-    //}
+	//$rec = get_record("webscheme","id","$webschemeid","scale","-$scaleid");
+	//
+	//if (!empty($rec) && !empty($scaleid)) {
+	//    $return = true;
+	//}
 
-    return $return;
+	return $return;
 }
 
 
@@ -187,11 +218,11 @@ function webscheme_scale_used($webschemeid, $scaleid) {
  * @return boolean True if the scale is used by any webscheme
  */
 function webscheme_scale_used_anywhere($scaleid) {
-    if ($scaleid and record_exists('webscheme', 'grade', -$scaleid)) {
-        return true;
-    } else {
-        return false;
-    }
+	if ($scaleid and record_exists('webscheme', 'grade', -$scaleid)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 
@@ -202,7 +233,7 @@ function webscheme_scale_used_anywhere($scaleid) {
  * @return boolean true if success, false on error
  */
 function webscheme_install() {
-    return true;
+	return true;
 }
 
 
@@ -213,7 +244,7 @@ function webscheme_install() {
  * @return boolean true if success, false on error
  */
 function webscheme_uninstall() {
-    return true;
+	return true;
 }
 
 
