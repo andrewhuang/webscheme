@@ -2,12 +2,12 @@
 
     function webscheme_backup_mods($bf,$preferences) {
 
-        global $CFG, $DB;
+        global $CFG;
 
         $status = true;
 
         //Iterate over choice table
-        $webschemes = $DB->get_records("webscheme", array("course" => $preferences->backup_course), "id");
+        $webschemes = get_records("webscheme","course",$preferences->backup_course, "id");
         if ($webschemes) {
             foreach ($webschemes as $ws) {
                 if (backup_mod_selected($preferences,'webscheme',$choice->id)) {
@@ -22,29 +22,32 @@
     
    function webscheme_backup_one_mod($bf,$preferences,$ws) {
 
-        global $CFG, $DB;
+        global $CFG;
 
         if (is_numeric($ws)) {
-            $ws = $DB->get_record('webscheme',array('id' => $ws));
+            $ws = get_record('webscheme', 'id', $ws);
         }
 
         $status = true;
 
         //Start mod
         fwrite ($bf,start_tag("MOD",3,true));
-        //Print choice data
-        fwrite ($bf,full_tag("ID",4,false,$choice->id));
+        //Print webscheme data
+        fwrite ($bf,full_tag("ID",4,false,$ws->id));
         fwrite ($bf,full_tag("MODTYPE",4,false,"webscheme"));
         fwrite ($bf,full_tag("NAME",4,false,$ws->name));
         fwrite ($bf,full_tag("INTRO",4,false,$ws->intro));
         fwrite ($bf,full_tag("INTROFORMAT",4,false,$ws->introformat));
-        fwrite ($bf,full_tag("TIMECREATED",4,false,$ws->timeccreated));
+        fwrite ($bf,full_tag("TIMECREATED",4,false,$ws->timecreated));
         fwrite ($bf,full_tag("TIMEMODIFIED",4,false,$ws->timemodified));
 
-        $wsml = htmlentities($ws->wsml);  //so, html has be encoded twice now...
-        fwrite ($bf, full_tag("WSML",4,false,$wsml));
-
-        //End mod
+        fwrite ($bf,full_tag("WS_SETTINGS",4,false,htmlentities($ws->ws_settings)));
+        fwrite ($bf,full_tag("WS_EVENTS",4,false,htmlentities($ws->ws_events)));
+        fwrite ($bf,full_tag("WS_INITEXPR",4,false,htmlentities($ws->ws_initexpr)));
+        fwrite ($bf,full_tag("WS_LOUDURLS",4,false,htmlentities($ws->ws_loadurls)));
+        fwrite ($bf,full_tag("WS_HTML",4,false,htmlentities($ws->ws_html)));
+                        
+       //End mod
         $status = fwrite ($bf,end_tag("MOD",3,true));
 
         return $status;

@@ -80,6 +80,8 @@ navmenu($course, $cm)
 
 
 
+echo "<pre>";print_r($webscheme);echo"</pre>";break;
+
 
 ////// page part defintions
 
@@ -116,7 +118,7 @@ foreach ($loadurls as $loadurl) {
 }
 
 
-....
+//....
 
 
 //Initial Expressions

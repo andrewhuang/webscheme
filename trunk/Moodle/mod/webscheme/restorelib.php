@@ -4,7 +4,7 @@
 
     //This function executes all the restore procedure about this mod
     function webscheme_restore_mods($mod,$restore) {
-        global $CFG, $DB;
+        global $CFG;
 
         $status = true;
 
@@ -14,6 +14,10 @@
         if ($data) {
             //Now get completed xmlized object
             $info = $data->info;
+            // (STOLEN FROM CHOICE) if necessary, write to restorelog and adjust date/time fields
+            if ($restore->course_startdateoffset) {
+                restore_log_date_changes('Webscheme', $restore, $info['MOD']['#'], array('TIMEOPEN', 'TIMECLOSE'));
+            }
             //traverse_xmlize($info);                                                                     //Debug
             //print_object ($GLOBALS['traverse_array']);                                                  //Debug
             //$GLOBALS['traverse_array']="";                                                              //Debug
@@ -26,9 +30,25 @@
             $webscheme->timecreated = $info['MOD']['#']['TIMECREATED']['0']['#'];
             $webscheme->timemodified = $info['MOD']['#']['TIMEMODIFIED']['0']['#'];
             
-            $wsml = $info['MOD']['#']['WSML']['0']['#'];
-            $wsml = backup_todb(html_entity_decode($wsml));
-            $webscheme->wsml = $wsml;
+            $ws_settings = $info['MOD']['#']['WS_SETTINGS']['0']['#'];
+            $ws_settings = backup_todb(html_entity_decode($ws_settings));
+            $webscheme->ws_settings = $ws_settings;
+
+            $ws_events = $info['MOD']['#']['WS_EVENTS']['0']['#'];
+            $ws_events = backup_todb(html_entity_decode($ws_events));
+            $webscheme->ws_events = $ws_events;
+
+            $ws_initexpr = $info['MOD']['#']['WS_INITEXPR']['0']['#'];
+            $ws_initexpr = backup_todb(html_entity_decode($ws_initexpr));
+            $webscheme->ws_initexpr = $ws_initexpr;
+            
+            $ws_loadurls = $info['MOD']['#']['WS_LOADURLS']['0']['#'];
+            $ws_loadurls = backup_todb(html_entity_decode($ws_loadurls));
+            $webscheme->ws_loadurls = $ws_loadurls;
+            
+            $ws_html = $info['MOD']['#']['WS_HTML']['0']['#'];
+            $ws_html = backup_todb(html_entity_decode($ws_html));
+            $webscheme->ws_html = $ws_html;
             
 
             //The structure is equal to the db, so insert the webscheme
