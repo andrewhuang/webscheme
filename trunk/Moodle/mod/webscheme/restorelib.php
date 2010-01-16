@@ -52,6 +52,7 @@
             
 
             //The structure is equal to the db, so insert the webscheme
+            //  ah?  Do we need to addslashes or anything?
             $newid = $DB->insert_record ("webscheme",$webscheme);
 
             //Do some output

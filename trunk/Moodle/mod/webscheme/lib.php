@@ -19,14 +19,14 @@
  * @return int The id of the newly inserted webscheme record
  */
 function webscheme_add_instance($webscheme) {
-
 	//echo"<pre>";print_r($webscheme);echo"</pre>";break;
 	$webscheme->timecreated = time();
 	$webscheme->timemodified = time();
-    // ws_html is good to go
-    // ws_initexpr is  good
+	// ws_html is good to go
+	// ws_initexpr is  good		
 	webscheme_fixloadurls($webscheme);
 	webscheme_fixevents($webscheme);
+
 	// insert it.
 	return insert_record('webscheme', $webscheme);
 
@@ -34,8 +34,9 @@ function webscheme_add_instance($webscheme) {
 
 // tweaks the webscheme object
 function webscheme_fixloadurls(&$webscheme) {
-	$loadurls = preg_split("/\s+/", $webscheme->ws_loadurls, 0, PREG_SPLIT_NO_EMPTY);
-	$webscheme->ws_loadurls = json_encode($loadurls);
+	$webscheme->ws_loadurls = webscheme_remslashes($webscheme->ws_loadurls);
+	$loadurls = preg_split("/\s+/", $webscheme->ws_loadurls, 0, PREG_SPLIT_NO_EMPTY);	
+	$webscheme->ws_loadurls = webscheme_db_json_encode($loadurls);
 }
 
 function webscheme_fixevents(&$webscheme) {
@@ -47,27 +48,37 @@ function webscheme_fixevents(&$webscheme) {
 	$ws_events = array();
 	for($i=0; $i < count($enames); $i++) {
 		if (!empty($enames[$i])) {
-			$ws_events[] = array("name"=> $enames[$i], 
-			                     "assertion"=> $easserts[$i],
-								 "template"=> $etemplates[$i] );
+			$ws_events[] = array("name"=> webscheme_remslashes($enames[$i]),
+			                     "assertion"=> webscheme_remslashes($easserts[$i]),
+								 "template"=> webscheme_remslashes($etemplates[$i]) );
 		}
 	}
-
-	// why the db_preprocess?  oh, good question.  json_encode turns 
-	//  the line returns into \r\n nicely, but when added to the 
-	//  database, they get converted back to line returns.  Then,
-	//  the json decode freaks.  This solution probably isn't best, sigh.
-	$webscheme->ws_events = webscheme_processfordb(json_encode($ws_events));		
+	$webscheme->ws_events = webscheme_db_json_encode($ws_events);
 }
 
-// might need options to do this well.  Right now, it escapes
-// /r/n only.  addslashes does " as well...
-function webscheme_processfordb($str) {
-	// replace \r with \\r.  Need to quote the backslash in the replacement, sigh
-	$str = str_replace("\\r", "\\\\r", $str);
-	// replace \n with \\n
-	$str = str_replace("\\n", "\\\\n", $str);
-	return $str;
+
+// the arguments to this function have had addslashes() already done.
+// Thank you moodle, you bastardos.
+// need to reverse that
+//    moodle escapes : ' singlequote  " doublequote \ backslash 
+function webscheme_remslashes($str) {
+	// shouldn't there be a way in mod_form.php to prevent this being done already?
+	$search = array("\\'", "\\\"", "\\\\");
+	$replace = array("'", "\"", "\\");
+	return (str_replace($search, $replace, $str));
+}
+
+// Now, need to do json encode and then add slashes. 
+// json escapes (with a backslash)
+//   \/ (forward slash), 
+//   \b (backspace)  -- shouldn't ever get this, right?
+//   \t (tab)
+//   \f (formfeed... huh)
+//   \" (double quote)  -- it doesn't escape single quotes!
+//   \\ (a backslash)
+function webscheme_db_json_encode($str) {
+	$str = json_encode($str);
+	return (addslashes($str));   // right thing to do?
 }
 
 /**
@@ -81,11 +92,11 @@ function webscheme_processfordb($str) {
 function webscheme_update_instance($webscheme) {
 	$webscheme->timemodified = time();
 	$webscheme->id = $webscheme->instance;
-    // ws_html is good to go
-    // ws_initexpr is  good
+	// ws_html is good to go
+	// ws_initexpr is  good
 	webscheme_fixloadurls($webscheme);
 	webscheme_fixevents($webscheme);
-	
+
 	return update_record('webscheme', $webscheme);
 }
 

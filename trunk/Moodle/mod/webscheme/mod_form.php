@@ -98,7 +98,8 @@ class mod_webscheme_mod_form extends moodleform_mod {
 		$mform->addElement('header', 'content_header', get_string('content_header', 'webscheme'));
 		$htmleditorsettings = array('canUseHtmlEditor'=>'detect', 'rows' => 30,
 								'cols'  => 65, 'width' => 0,'height'=> 0);
-		$mform->addElement('htmleditor', 'ws_html', get_string('ws_html', 'webscheme'), $htmleditorsettings);
+		//$mform->addElement('htmleditor', 'ws_html', get_string('ws_html', 'webscheme'), $htmleditorsettings);
+		$mform->addElement('textarea', 'ws_html', get_string('ws_html', 'webscheme'), 'rows="30" cols="80"');
 		$mform->setType('ws_html', PARAM_RAW);
 		$mform->addRule('ws_html', null, 'required', null, 'client');
 		// hmmm, where is the help file supposed to be? taint workin
