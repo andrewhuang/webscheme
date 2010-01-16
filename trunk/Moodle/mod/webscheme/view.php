@@ -160,8 +160,10 @@ function webscheme_field2json($field, $htmlentity_encode = true) {
 	global $webscheme;
 
 	$json =  json_decode($webscheme->$field, true);
-	if (json_last_error() != JSON_ERROR_NONE) {
-		print_error(get_string('badjsondecode','webscheme') . ": field={$field}");
+	if (function_exists("json_last_error")) {   // needs php 5.3+
+		if (json_last_error() != JSON_ERROR_NONE) {
+			print_error(get_string('badjsondecode','webscheme') . ": field={$field}");
+		}
 	}
 	if ($htmlentity_encode) {
 		if (gettype($json) == "string") {

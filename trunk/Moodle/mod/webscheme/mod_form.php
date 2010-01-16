@@ -123,17 +123,21 @@ class mod_webscheme_mod_form extends moodleform_mod {
 
 			// loadurls...
 			$loadurlsarray = json_decode($defaults['ws_loadurls'], true);
-			if (json_last_error() != JSON_ERROR_NONE) {
-				print_error(get_string('badjsondecode_auth','webscheme').
+			if (function_exists("json_last_error")) {
+				if (json_last_error() != JSON_ERROR_NONE) {
+					print_error(get_string('badjsondecode_auth','webscheme').
 				            "(cmid={$this->_instance}, field=loadurls");
+				}
 			}
 			$defaults['ws_loadurls'] = implode(" \n", $loadurlsarray);
 
 			//events
 			$eventsarray = json_decode($defaults['ws_events'], true);
-			if (json_last_error() != JSON_ERROR_NONE) {
-				print_error(get_string('badjsondecode_auth','webscheme').
+			if (function_exists("json_last_error")) {
+				if (json_last_error() != JSON_ERROR_NONE) {
+					print_error(get_string('badjsondecode_auth','webscheme').
 				            "(cmid={$this->_instance}, field=events");
+				}
 			}
 			//echo"<hr><pre>";print_r($eventsarray);echo"</pre>";die();
 			// sniff, wherefore art thou anonymous lambdas?  php 5.3?
