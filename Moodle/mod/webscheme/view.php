@@ -63,15 +63,14 @@ $navlinks[] = array('name' => format_string($webscheme->name),
 $navigation = build_navigation($navlinks);
 
 // for webscheme
-require_js(dirname(__FILE__).'defs/ws-lib.js');
+require_js($CFG->wwwroot . '/mod/webscheme/defs/ws-lib.js');
 $css_tag = '<link href="defs/ws-defaults.css" rel="stylesheet" type="text/css" />';
 
 
-print_header_simple(
-format_string($webscheme->name),
-    '', 
+print_header_simple(format_string($webscheme->name),
+					'', 
 $navigation,
-    '', 
+					'', 
 $css_tag,
 true,
 update_module_button($cm->id, $course->id, get_string('modulename', 'webscheme')),
@@ -80,12 +79,45 @@ navmenu($course, $cm)
 
 
 
-echo "<pre>";print_r($webscheme);echo"</pre>";break;
+//echo "<pre>";print_r($webscheme);echo"</pre>";break;
 
 
-////// page part defintions
+////// webschemey defintions
 
-$scheme_handler_start = <<<EEOOTT
+// loadurls
+$ws_loadurl_params = "";
+$ws_loadUrlCount = 0;
+foreach (webscheme_field2json('ws_loadurls') as $loadurl) {
+	$loadurl = htmlentities($loadurl, ENT_QUOTES);
+	$ws_loadurl_params .= "<param value=\"{$loadurl}\" name=\"loadurl-{$ws_loadUrlCount}\" /> ";
+	$ws_loadUrlCount++;
+}
+
+//Initial Expression
+$ws_initexpr = htmlentities($webscheme->ws_initexpr, ENT_QUOTES);
+$ws_initexpr_param = "<param value=\"" . $ws_initexpr . "\" name=\"init-expr\" /> ";
+
+//Events
+$ws_event_params = "";
+$ws_eventCount = 0;
+foreach (webscheme_field2json('ws_events', false) as $event){
+	$name = htmlentities($event['name'], ENT_QUOTES);
+	$assertions = htmlentities($event['assertion'], ENT_QUOTES);
+	$template = htmlentities($event['template'], ENT_QUOTES);
+	$ws_event_params .= "<param value=\"$name\" name=\"event-name-$ws_eventCount\" /> ";
+	$ws_event_params .= "<param value=\"$assertions\" name=\"event-assertions-$ws_eventCount\" /> ";
+	$ws_event_params .= "<param value=\"$template\" name=\"event-template-$ws_eventCount\" /> ";
+	$ws_eventCount++;
+}
+
+// html
+$ws_html = $webscheme->ws_html;
+
+
+////  Print the webschemey parts
+echo "<br/>";
+
+echo <<<EEOOTT
 	<div>
 	<!-- Sorry, this is not an XHTML element but Safari ne comprends pas l'object -->
 	<applet width="120" height="36"
@@ -102,71 +134,45 @@ $scheme_handler_start = <<<EEOOTT
 	<param value="#AAAACC" name="boxfgcolor" />
 	<param value="#FFCC33" name="boxbgcolor" />
 	<param value="Loading WebScheme..." name="boxmessage" />
+	
 EEOOTT;
 
-// loadurls
-$loadurl_parameters = "";
-$loadUrlCount = 0;
-$loadurls = json_decode($defaults['ws_loadurls'], true);
-if (json_last_error() != JSON_ERROR_NONE) {
-	print_error(get_string('badjsondecode','webscheme')	);
-}
-foreach ($loadurls as $loadurl) {
-	$loadurl = trim($loadurl);   // needed?
-	$loadurl_parameters .= "<param value=\"{$loadurl}\" name=\"loadurl-{$loadUrlCount} /> ";
-	$loadUrlCount++;
-}
-
-
-//....
-
-
-//Initial Expressions
-$initExpr = trim(htmlentities($wsml->{'ws-initExpr'}));
-echo "<param value=\"$initExpr\" name=\"init-expr\" />\n";
- 
-//Events
-$eCount = 0;
-foreach ($wsml->{'ws-event'} as $event){
-	$name = trim(htmlentities($event->{'ws-event-name'}));
-	$assertions = trim(htmlentities($event->{'ws-event-assertions'}));
-	$template = trim(htmlentities($event->{'ws-event-template'}));
-	echo "<param value=\"$name\" name=\"event-name-$eCount\" />\n";
-	echo "<param value=\"$assertions\" name=\"event-assertions-$eCount\" />\n";
-	echo "<param value=\"$template\" name=\"event-template-$eCount\" />\n";
-	$eCount++;
-}
-
-// -----------------------------------------------------------------------------
-// Predefined values -----------------------------------------------------------
-
-
-// -----------------------------------------------------------------------------
-
-// User defined section using WSML/HTML (from the <ws-html> data in WSML)
-// changed to take into account html-entities pass
-$html = $wsml->{'ws-html'}->asXML();
-echo html_entity_decode($html);
-//TODO -- fix this
-echo $wsml->{'ws-html'}->asXML();
-echo "\n";
-// Predefined value -----------------------------------------------------------
-echo "</form>\n";
-// ----------------------------------------------------------------------------
-
-
-/// Print the main part of the page
-echo "<br/>";
-
-echo $scheme_handler_start . "\n";
-
+echo $ws_loadurl_params . "\n";
+echo $ws_initexpr_param  . "\n";
+echo $ws_event_params . "\n";
 
 echo "</applet><div>\n";
 echo "<form onsubmit=\"return false;\" id=\"wsfields\">\n";
+
+echo $ws_html . "\n";
+
+echo "</form>\n";
 echo "<!-- End of WSML -->\n";
 
 /// Finish the page
 print_footer($course);
+
+
+
+//// utility
+
+function webscheme_field2json($field, $htmlentity_encode = true) {
+	global $webscheme;
+
+	$json =  json_decode($webscheme->$field, true);
+	if (json_last_error() != JSON_ERROR_NONE) {
+		print_error(get_string('badjsondecode','webscheme') . ": field={$field}");
+	}
+	if ($htmlentity_encode) {
+		if (gettype($json) == "string") {
+			$json = html_entity_decode($json);
+		} else if (gettype($json == "array")) {
+			$json = array_map("html_entity_decode", $json);
+		}
+	}
+
+	return $json;
+}
 
 
 
