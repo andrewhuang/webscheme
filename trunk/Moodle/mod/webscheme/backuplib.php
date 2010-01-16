@@ -44,7 +44,7 @@
         fwrite ($bf,full_tag("WS_SETTINGS",4,false,htmlentities($ws->ws_settings)));
         fwrite ($bf,full_tag("WS_EVENTS",4,false,htmlentities($ws->ws_events)));
         fwrite ($bf,full_tag("WS_INITEXPR",4,false,htmlentities($ws->ws_initexpr)));
-        fwrite ($bf,full_tag("WS_LOUDURLS",4,false,htmlentities($ws->ws_loadurls)));
+        fwrite ($bf,full_tag("WS_LOADURLS",4,false,htmlentities($ws->ws_loadurls)));
         fwrite ($bf,full_tag("WS_HTML",4,false,htmlentities($ws->ws_html)));
                         
        //End mod
@@ -57,8 +57,6 @@
      ////?? no real idea what this is doing. Copied mostly from mod/label
      ////Return an array of info (name,value)
      function webscheme_check_backup_mods($course,$user_data=false,$backup_unique_code,$instances=null) {
-        global $DB;
-
         if (!empty($instances) && is_array($instances) && count($instances)) {
             $info = array();
             foreach ($instances as $id => $instance) {
@@ -68,8 +66,8 @@
         }
 
          //First the course data
-         $info[0][0] = get_string("modulenameplural","label");
-         $info[0][1] = $DB->count_records("webscheme", array("course"=>$course));
+         $info[0][0] = get_string("modulenameplural","webscheme");
+         $info[0][1] = count_records("webscheme", "course", "$course");
          return $info;
          
          //No user data, so nothing more...
@@ -86,6 +84,7 @@
     }
     
     
+/*
     // no real idea here.  Supposed to munge $content links somehow? 
     //   (it is in mod/choice)
     function webscheme_encode_content_links($content,$preferences) {
@@ -94,4 +93,6 @@
         
         return $content;  // un-munged
     }
+*/
+    
 ?>
