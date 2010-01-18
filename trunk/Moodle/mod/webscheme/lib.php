@@ -61,6 +61,7 @@ function webscheme_fixevents(&$webscheme) {
 // Thank you moodle, you bastardos.
 // need to reverse that
 //    moodle escapes : ' singlequote  " doublequote \ backslash 
+// DOH: php function 'stripslashes' exists.
 function webscheme_remslashes($str) {
 	// shouldn't there be a way in mod_form.php to prevent this being done already?
 	$search = array("\\'", "\\\"", "\\\\");

@@ -8,6 +8,7 @@ $string['modulenameplural'] = 'WebSchemes';
 $string['webschemeintro'] = 'WebScheme Intro';
 $string['webschemename'] = 'WebScheme Name';
 
+$string['noinstances'] = 'There are no webscheme activities in this course';
 
 $string['pagedefsheader'] = 'Page Definitions';
 $string['loadurls'] = 'Load URLs (whitespace separated)';
