@@ -23,8 +23,8 @@ add_to_log($course->id, 'webscheme', 'view all', "index.php?id=$course->id", '')
 
 /// Get all required stringswebscheme
 
-$strwebschemes = get_string("modulenameplural", "webschemes");
-$strwebscheme  = get_string("modulename", "webscheme");
+$strwebschemes = get_string('modulenameplural', 'webscheme');
+$strwebscheme  = get_string("modulename", 'webscheme');
 
 
 /// Print the header
@@ -40,7 +40,7 @@ print_header_simple("$strwebschemes", "", $navigation, "", "", true, "", navmenu
 /// Get all the appropriate data
 
 if (! $webschemes = get_all_instances_in_course('webscheme', $course)) {
-    notice("There are no instances of webscheme", "../../course/view.php?id=$course->id");
+    notice(get_string('noinstances','webscheme'), "../../course/view.php?id=$course->id");
     die;
 }
 
@@ -79,7 +79,7 @@ foreach ($webschemes as $webscheme) {
     }
 }
 
-print_heading($strnewmodules);
+print_heading($strwebschemes);
 print_table($table);
 
 /// Finish the page
