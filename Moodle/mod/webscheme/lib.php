@@ -229,11 +229,11 @@ function webscheme_scale_used($webschemeid, $scaleid) {
  * @return boolean True if the scale is used by any webscheme
  */
 function webscheme_scale_used_anywhere($scaleid) {
-	if ($scaleid and record_exists('webscheme', 'grade', -$scaleid)) {
-		return true;
-	} else {
+	//if ($scaleid and record_exists('webscheme', 'grade', -$scaleid)) {
+	//	return true;
+	//} else {
 		return false;
-	}
+	//}
 }
 
 
