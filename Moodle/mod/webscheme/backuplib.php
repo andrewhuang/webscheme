@@ -6,11 +6,11 @@
 
         $status = true;
 
-        //Iterate over choice table
+        //Iterate over webscheme table
         $webschemes = get_records("webscheme","course",$preferences->backup_course, "id");
         if ($webschemes) {
             foreach ($webschemes as $ws) {
-                if (backup_mod_selected($preferences,'webscheme',$choice->id)) {
+                if (backup_mod_selected($preferences,'webscheme',$ws->id)) {
                     $status = webscheme_backup_one_mod($bf,$preferences,$ws);
                 }
             }

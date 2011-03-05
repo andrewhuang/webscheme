@@ -79,7 +79,7 @@ function webscheme_remslashes($str) {
 //   \\ (a backslash)
 function webscheme_db_json_encode($str) {
 	$str = json_encode($str);
-	return (addslashes($str));   // right thing to do?
+	return (addslashes_js($str));   // right thing to do?
 }
 
 /**
